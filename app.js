@@ -18,9 +18,13 @@ app.get('/ping', (req, res) => {
 })
 
 const start = async () => {
-  app.listen(PORT, () => {
-    console.log(`Listening on PORT : ${PORT}`)
-  })
+  try {
+    app.listen(PORT, () => {
+      console.log(`Server is Listening on PORT : ${PORT}`)
+    })
+  } catch (err) {
+    console.err(err)
+  }
 }
 
 start()
