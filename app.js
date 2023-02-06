@@ -11,11 +11,11 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(routes)
 
-const PORT = process.env.PORT
-
 app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' })
 })
+
+const PORT = process.env.PORT
 
 const start = async () => {
   try {
