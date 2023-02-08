@@ -4,7 +4,7 @@ CREATE TABLE `users` (
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `thumbnail` varchar(20),
+  `profile_image` varchar(20),
   `phone_number` varchar(20) NOT NULL,
   `gender` varchar(20),
   `birthday` datetime NOT NULL,
