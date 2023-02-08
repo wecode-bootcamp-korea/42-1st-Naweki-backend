@@ -1,16 +1,18 @@
 -- migrate:up
 CREATE TABLE `orders` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `uuid` varchar(20) COMMENT 'UNIQUE',
+  `order_number` varchar(30),
   `user_id` int,
-  `email` varchar(20) NOT NULL,
-  `payment_method` varchar(20) COMMENT '결제수단',
-  `payment_amount` decimal(10) COMMENT '결제 금액',
+  `email` varchar(30) NOT NULL,
+  `payment_method` varchar(30),
+  `payment_amount` decimal(12, 2),
   `order_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `order_status_code_id` int,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   CONSTRAINT orders_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id),
-  CONSTRAINT orders_uuid_uk UNIQUE (uuid)
+  CONSTRAINT orders_order_number_uk UNIQUE (order_number)
 );
 
 -- migrate:down

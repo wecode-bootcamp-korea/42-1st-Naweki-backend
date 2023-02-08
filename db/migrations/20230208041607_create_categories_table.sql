@@ -1,8 +1,8 @@
 -- migrate:up
-CREATE TABLE `products_main_menu` (
+CREATE TABLE `categories` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(20)
 );
 
 -- migrate:down
-DROP TABLE products_main_menu;
+DROP TABLE categories;

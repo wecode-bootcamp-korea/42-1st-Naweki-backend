@@ -3,6 +3,7 @@
 
 ### Custom ###
 db/schema.sql
+dbdiagram.dbml
 
 ### dotenv ###
 .env
