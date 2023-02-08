@@ -4,11 +4,11 @@ CREATE TABLE `products_reviews` (
   `title` varchar(20) NOT NULL,
   `description` varchar(20) NOT NULL,
   `rating` float,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp COMMENT 'on update now()',
-  `order_id` int,
+  `order_item_id` int,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  CONSTRAINT products_reviews_order_id_fk FOREIGN KEY (order_id) REFERENCES order_items (id)
+  CONSTRAINT products_reviews_order_id_fk FOREIGN KEY (order_item_id) REFERENCES order_items (id)
 )
 
 -- migrate:down

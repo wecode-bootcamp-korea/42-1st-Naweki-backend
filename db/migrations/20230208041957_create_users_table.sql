@@ -15,8 +15,8 @@ CREATE TABLE `users` (
   `city` varchar(20),
   `postal_code` varchar(20) NOT NULL,
   `country` varchar(20) NOT NULL COMMENT '국가',
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
    CONSTRAINT users_email_uk UNIQUE (email)
 )

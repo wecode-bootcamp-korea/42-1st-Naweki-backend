@@ -2,7 +2,7 @@
 CREATE TABLE `products_gender` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(20),
-  `product_id` int,
+  `product_id` int NOT NULL,
 
   CONSTRAINT products_gender_products_id_fk FOREIGN KEY (product_id) REFERENCES products (id)
 )

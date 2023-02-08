@@ -3,9 +3,9 @@ CREATE TABLE `order_items` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `quantity` int,
   `price` float,
-  `order_id` int,
-  `product_id` int,
-  `order_item_status_code_id` int,
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `order_item_status_code_id` int NOT NULL,
 
   CONSTRAINT order_items_order_id_fk FOREIGN KEY (order_id) REFERENCES orders (id),
   CONSTRAINT order_items_product_id_fk FOREIGN KEY (product_id) REFERENCES products (id),
