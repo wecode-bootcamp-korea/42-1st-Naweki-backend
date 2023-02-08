@@ -5,4 +5,4 @@ CREATE TABLE `order_status` (
 )
 
 -- migrate:down
-DROP TABLE order_status_codes;
+DROP TABLE order_status;
