@@ -31,7 +31,7 @@ const signUp = async (user) => {
   }
 }
 
-const getDuplicateEmail = async (email) => {
+const getEmail = async (email) => {
   const rawQuery = `
     SELECT email FROM users WHERE email = ?;`
 
@@ -43,5 +43,5 @@ const getDuplicateEmail = async (email) => {
 
 module.exports = {
   signUp,
-  getDuplicateEmail
+  getEmail
 }

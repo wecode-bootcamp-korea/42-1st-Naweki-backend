@@ -18,6 +18,11 @@ const signUp = async (user) => {
   }
 }
 
+const getEmail = async (email) => {
+  return await userDao.getEmail(email)
+}
+
 module.exports = {
-  signUp
+  signUp,
+  getEmail
 }

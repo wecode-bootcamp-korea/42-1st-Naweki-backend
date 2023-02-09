@@ -1,5 +1,4 @@
 const userService = require('../services/userService')
-const userDao = require('../models/userDao')
 const User = require('../classes/user')
 const { catchAsync } = require('../utils/error/handler')
 const { checkEmail, checkPassword } = require('../utils/validation')
@@ -19,7 +18,8 @@ const lookUp = catchAsync(async (req, res) => {
       .json({ message: invalidEmailErr.message })
   }
 
-  if (await userDao.getDuplicateEmail(email)) {
+  const isDuplicateEmail = await userService.getEmail(email)
+  if (isDuplicateEmail) {
     return res
       .status(duplicateEmailErr.statusCode)
       .json({ message: duplicateEmailErr.message })
@@ -49,7 +49,7 @@ const signUp = catchAsync(async (req, res) => {
       .json({ message: invalidPasswordErr.message })
   }
 
-  const isDuplicateEmail = await userDao.getDuplicateEmail(user.email)
+  const isDuplicateEmail = await userService.getEmail(user.email)
   if (isDuplicateEmail) {
     return res
       .status(duplicateEmailErr.statusCode)
