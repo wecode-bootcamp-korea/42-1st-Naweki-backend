@@ -19,7 +19,7 @@ const lookUp = catchAsync(async (req, res) => {
       .json({ message: invalidEmailErr.message })
   }
 
-  if (userDao.getDuplicateEmail(email)) {
+  if (await userDao.getDuplicateEmail(email)) {
     return res
       .status(duplicateEmailErr.statusCode)
       .json({ message: duplicateEmailErr.message })
