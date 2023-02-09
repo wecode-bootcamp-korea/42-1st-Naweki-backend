@@ -5,6 +5,7 @@ CREATE TABLE `products_options` (
   `product_id` int NOT NULL,
   `color_id` int NULL,
   `size_id` int NULL,
+  `gender_id` int NULL,
 
   CONSTRAINT products_options_product_id_fk FOREIGN KEY (product_id) REFERENCES products (id),
   CONSTRAINT products_options_color_id_fk FOREIGN KEY (color_id) REFERENCES colors (id),
