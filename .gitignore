@@ -4,6 +4,8 @@
 ### Custom ###
 db/schema.sql
 dbdiagram.dbml
+.prettierrc
+.vscode/
 
 ### dotenv ###
 .env
