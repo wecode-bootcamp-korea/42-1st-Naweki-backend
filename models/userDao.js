@@ -9,12 +9,14 @@ const signUp = async (user) => {
     (email, first_name, last_name, password, shopping_preference, birthday)
     VALUES (?, ?, ?, ?, ?, ?);`
 
-    await database.query(rawQuery, [user.email,
-    user.first_name,
-    user.last_name,
-    user.password,
-    user.shopping_preference,
-    user.birthday])
+    await database.query(rawQuery, [
+      user.email,
+      user.first_name,
+      user.last_name,
+      user.password,
+      user.shopping_preference,
+      user.birthday,
+    ])
 
     return
   } catch (err) {
@@ -24,17 +26,24 @@ const signUp = async (user) => {
   }
 }
 
-const getEmail = async (email) => {
+const getUser = async (email) => {
   const rawQuery = `
-    SELECT email FROM users WHERE email = ?;`
+    SELECT
+      id,
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      birthday,
+      point
+      FROM users WHERE email = ?;`
 
   const [result] = await database.query(rawQuery, [email])
-  if (result) return true
-
-  return false
+  return result
 }
 
 module.exports = {
   signUp,
-  getEmail
+  getUser,
 }
