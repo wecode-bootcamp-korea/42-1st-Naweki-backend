@@ -32,7 +32,9 @@ const signUp = catchAsync(async (req, res) => {
   const user = new User(req.body)
 
   if (!user.keyCheck()) {
-    return res.status(keyErr.statusCode).json({ message: keyErr.message })
+    return res
+      .status(keyErr.statusCode)
+      .json({ message: keyErr.message })
   }
 
   if (!checkEmail(user.email)) {
@@ -56,7 +58,7 @@ const signUp = catchAsync(async (req, res) => {
 
   userService.signUp(user)
 
-  res.status(201).json({ message: 'SIGNUP_SUCCESS' })
+  return res.status(201).json({ message: 'SIGNUP_SUCCESS' })
 })
 
 module.exports = {
