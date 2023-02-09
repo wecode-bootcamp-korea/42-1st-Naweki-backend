@@ -10,7 +10,7 @@ const {
   duplicateEmailErr
 } = require('../utils/error/userErrMsg')
 
-const lookup = catchAsync(async (req, res) => {
+const lookUp = catchAsync(async (req, res) => {
   const { email } = req.body
 
   if (!checkEmail(email)) {
@@ -60,6 +60,6 @@ const signUp = catchAsync(async (req, res) => {
 })
 
 module.exports = {
-  lookup,
+  lookUp,
   signUp
 }

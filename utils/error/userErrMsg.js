@@ -24,7 +24,7 @@ const messages = {
     message: 'FAILED_TO_CREATE_HASHED_PASSWORD'
   },
 
-  failedToSignUPErr: {
+  failedToSignUpErr: {
     statusCode: 400,
     message: "FAILED_TO_SIGNUP"
   }
