@@ -56,7 +56,7 @@ const signUp = catchAsync(async (req, res) => {
       .json({ message: duplicateEmailErr.message })
   }
 
-  userService.signUp(user)
+  await userService.signUp(user)
 
   return res.status(201).json({ message: 'SIGNUP_SUCCESS' })
 })

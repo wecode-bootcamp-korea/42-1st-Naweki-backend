@@ -20,7 +20,7 @@ CREATE TABLE `users` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-   CONSTRAINT users_email_uk UNIQUE (email)
+  CONSTRAINT users_email_uk UNIQUE (email)
 )
 
 -- migrate:down
