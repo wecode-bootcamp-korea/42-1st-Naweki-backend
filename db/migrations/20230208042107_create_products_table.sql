@@ -4,7 +4,7 @@ CREATE TABLE `products` (
   `name` varchar(20) NOT NULL,
   `price` decimal(12, 2) NOT NULL DEFAULT 0,
   `description` text,
-  `style_id` int NOT NULL,
+  `style_id` varchar(20) NOT NULL,
   `sub_category_id` int,
   `discount_rate` float NULL,
   `thumbnail_image` varchar(300) NULL,
