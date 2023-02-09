@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.get('/lookup', userController.lookup)
 
-router.post('/join', userController.join)
+router.post('/signup', userController.signUp)
 
 module.exports = router

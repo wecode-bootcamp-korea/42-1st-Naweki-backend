@@ -1,25 +1,23 @@
 const userDao = require('../models/userDao')
 const { makeHashedPassword } = require('../utils/validation')
+const { encodePasswordErr } = require('../utils/error/userErrMsg')
 
-const userSignup = async (userInfo) => {
+const signUp = async (user) => {
   try {
-    // 1 비밀번호 암호화
-    const hashedPassword = await makeHashedPassword(userInfo.password)
+    const hashedPassword = await makeHashedPassword(user.password)
     if (!hashedPassword) {
-      const err = new Error('Failed to create hashed password.')
-      err.statusCode = 400
+      const err = new Error(encodePasswordErr.message)
+      err.statusCode = encodePasswordErr.statusCode
       throw err
     }
 
-    userInfo.password = hashedPassword
-
-    const result = await userDao.join(userInfo)
-    return ''
+    user.password = hashedPassword
+    return await userDao.signUp(user)
   } catch (error) {
     throw error
   }
 }
 
 module.exports = {
-  userSignup
+  signUp
 }
