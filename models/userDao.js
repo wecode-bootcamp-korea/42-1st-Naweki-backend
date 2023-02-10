@@ -3,6 +3,15 @@ const { failedToSignUpErr } = require('../utils/error/userErrMsg')
 
 const signUp = async (user) => {
   try {
+    const {
+      email,
+      firstName,
+      lastName,
+      password,
+      shoppingPreference,
+      birthday,
+    } = user
+
     const rawQuery = `
     INSERT INTO
       users
@@ -10,19 +19,17 @@ const signUp = async (user) => {
     VALUES (?, ?, ?, ?, ?, ?);`
 
     await database.query(rawQuery, [
-      user.email,
-      user.first_name,
-      user.last_name,
-      user.password,
-      user.shopping_preference,
-      user.birthday,
+      email,
+      firstName,
+      lastName,
+      password,
+      shoppingPreference,
+      birthday,
     ])
 
     return
   } catch (err) {
-    err.message = failedToSignUpErr.message
-    err.statusCode = failedToSignUpErr.statusCode
-    throw err
+    throw new Error('failedToSignUpErr')
   }
 }
 
