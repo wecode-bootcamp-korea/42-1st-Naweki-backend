@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE `products_options` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `qunatity` int,
+  `quantity` int,
   `product_id` int NOT NULL,
   `color_id` int NULL,
   `size_id` int NULL,
