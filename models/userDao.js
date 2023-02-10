@@ -37,7 +37,7 @@ const getUser = async (email) => {
       phone_number,
       birthday,
       point
-      FROM users WHERE email = ?;`
+    FROM users WHERE email = ?;`
 
   const [result] = await database.query(rawQuery, [email])
   return result
