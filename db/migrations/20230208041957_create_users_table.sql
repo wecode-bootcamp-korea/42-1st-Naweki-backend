@@ -16,7 +16,6 @@ CREATE TABLE `users` (
   `province` varchar(20) NULL,
   `city` varchar(20) NULL,
   `postal_code` varchar(20) NULL,
-  `country` varchar(20) NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
