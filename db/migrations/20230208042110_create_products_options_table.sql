@@ -9,7 +9,8 @@ CREATE TABLE `products_options` (
 
   CONSTRAINT products_options_product_id_fk FOREIGN KEY (product_id) REFERENCES products (id),
   CONSTRAINT products_options_color_id_fk FOREIGN KEY (color_id) REFERENCES colors (id),
-  CONSTRAINT products_options_size_id_fk FOREIGN KEY (size_id) REFERENCES sizes (id)
+  CONSTRAINT products_options_size_id_fk FOREIGN KEY (size_id) REFERENCES sizes (id),
+  CONSTRAINT products_options_gender_id_fk FOREIGN KEY (gender_id) REFERENCES genders (id)
 )
 
 -- migrate:down
