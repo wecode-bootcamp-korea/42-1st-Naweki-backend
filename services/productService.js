@@ -14,7 +14,7 @@ const getProducts = async (filter) => {
   const joinedProducts = products.map(product => ({
     id: product.id,
     name: product.name,
-    price: product.price,
+    price: Math.ceil(product.price),
     thumbnail_image: product.thumbnail_image,
     isNew: isNewProduct(product.created_at),
     sub_category: product.category,

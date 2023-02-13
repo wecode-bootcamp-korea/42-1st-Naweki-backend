@@ -59,14 +59,11 @@ const getProductOptions = async (productIds, filter) => {
 
   let where = []
 
-  const gender = filter.gender ? `g.type = '${filter.gender}'` : ' '
-  if (gender != ' ') {
-    where.push(gender)
-  }
+  const { gender } = filter
+  const productId = `po.product_id IN(${Array(productIds.length)
+    .fill('?').join(',')})`
 
-  const productId = `po.product_id IN(${Array(productIds.length).fill('?').join(',')
-    })`
-
+  gender ? where.push(`g.type = '${gender}'`) : ''
   where.push(productId)
   where = where.join(' AND ')
 
