@@ -16,7 +16,27 @@ const productService = require('../services/productService')
 // 7. 할인가  있으면 몇 % 할인인지
 // 8. 성별
 
+// 1. 남성 신발 전체 보여주기
+// 2. 신발 하나에 대한 색상 갯수 가져오기
+// 3. 신발 하나에 대한 서브 카테고리 이름 가져오기
+
 const getProducts = catchAsync(async (req, res) => {
+  const { category, sub_category, gender } = req.query
+  const [limit, offset] = getPageAndLimit(req)
+
+  const filter = {
+    category: category,
+    sub_category: sub_category,
+    gender: gender,
+    limit: limit,
+    offset: offset
+  }
+
+  const products = await productService.getProducts(filter)
+  return res.status(200).json({ data: products })
+})
+
+const getPageAndLimit = (req) => {
   let { page, limit } = req.query
   page = parseInt(page)
   limit = parseInt(limit)
@@ -25,9 +45,8 @@ const getProducts = catchAsync(async (req, res) => {
 
   const offset = (page - 1) * limit
 
-  const products = await productService.getProducts(limit, offset)
-  return res.status(200).json({ message: products })
-})
+  return [limit, offset]
+}
 
 module.exports = {
   getProducts
