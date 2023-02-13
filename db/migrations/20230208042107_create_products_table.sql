@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE `products` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL,
+  `name` varchar(300) NOT NULL,
   `price` decimal(12, 2) NOT NULL DEFAULT 0,
   `description` text,
   `style_code` varchar(20) NOT NULL,
