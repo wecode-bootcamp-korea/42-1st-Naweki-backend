@@ -1,33 +1,43 @@
 const messages = {
   keyErr: {
     statusCode: 400,
-    message: 'KEY_ERROR'
+    message: 'KEY_ERROR',
   },
 
   invalidEmailErr: {
     statusCode: 400,
-    message: 'INVALID_EAMIL'
+    message: 'INVALID_EMAIL',
   },
 
   invalidPasswordErr: {
     statusCode: 400,
-    message: 'INVALID_PASSWORD'
+    message: 'INVALID_PASSWORD',
   },
 
   duplicateEmailErr: {
     statusCode: 400,
-    message: 'DUPLICATE_EMAIL'
+    message: 'DUPLICATE_EMAIL',
   },
 
   encodePasswordErr: {
     statusCode: 400,
-    message: 'FAILED_TO_CREATE_HASHED_PASSWORD'
+    message: 'FAILED_TO_CREATE_HASHED_PASSWORD',
   },
 
   failedToSignUpErr: {
     statusCode: 400,
-    message: "FAILED_TO_SIGNUP"
-  }
+    message: 'FAILED_TO_SIGNUP',
+  },
+
+  pwCheckErr: {
+    statusCode: 400,
+    message: 'INVALID_PASSWORD',
+  },
+
+  failedToLogin: {
+    statusCode: 400,
+    message: 'FAILED_TO_LOGIN',
+  },
 }
 
 module.exports = messages

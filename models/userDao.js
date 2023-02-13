@@ -3,38 +3,54 @@ const { failedToSignUpErr } = require('../utils/error/userErrMsg')
 
 const signUp = async (user) => {
   try {
+    const {
+      email,
+      firstName,
+      lastName,
+      password,
+      shoppingPreference,
+      birthday,
+    } = user
+
     const rawQuery = `
     INSERT INTO
       users
     (email, first_name, last_name, password, shopping_preference, birthday)
     VALUES (?, ?, ?, ?, ?, ?);`
 
-    await database.query(rawQuery, [user.email,
-    user.first_name,
-    user.last_name,
-    user.password,
-    user.shopping_preference,
-    user.birthday])
+    await database.query(rawQuery, [
+      email,
+      firstName,
+      lastName,
+      password,
+      shoppingPreference,
+      birthday,
+    ])
 
     return
   } catch (err) {
-    err.message = failedToSignUpErr.message
-    err.statusCode = failedToSignUpErr.statusCode
-    throw err
+    throw new Error('failedToSignUpErr')
   }
 }
 
-const getEmail = async (email) => {
+const getUser = async (email) => {
   const rawQuery = `
-    SELECT email FROM users WHERE email = ?;`
+    SELECT
+      id,
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      birthday,
+      point
+    FROM users WHERE email = ?;`
 
   const [result] = await database.query(rawQuery, [email])
-  if (result) return true
-
-  return false
+  return result
 }
 
 module.exports = {
   signUp,
-  getEmail
+  getUser,
 }

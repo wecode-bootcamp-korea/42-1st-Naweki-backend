@@ -1,4 +1,4 @@
-const { DataSource } = require('typeorm')
+const { DataSource } = require("typeorm");
 
 const database = new DataSource({
   type: process.env.TYPEORM_CONNECTION,
@@ -6,16 +6,17 @@ const database = new DataSource({
   port: process.env.TYPEORM_PORT,
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
-  database: process.env.TYPEORM_DATABASE
-})
+  database: process.env.TYPEORM_DATABASE,
+});
 
-database.initialize()
+database
+  .initialize()
   .then(() => {
-    console.log('database has been initailized.')
+    console.log("Database has been initialized.");
   })
-  .catch(err => {
-    console.log('Failed to initialize database.', err)
-    database.destroy()
-  })
+  .catch((err) => {
+    console.log("Failed to initialize database.", err);
+    database.destroy();
+  });
 
-module.exports = database
+module.exports = database;
