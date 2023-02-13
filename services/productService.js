@@ -4,7 +4,7 @@ const { getCurrentTime } = require('../utils/time')
 const getProducts = async (filter) => {
   const products = await productDao.getProducts(filter)
   const productsIds = products.map(product => product.id)
-  const productOptions = await productDao.getProductOptions(productsIds)
+  const productOptions = await productDao.getProductOptions(productsIds, filter)
 
   const productOptionsObj = {}
   productOptions.forEach(po => {

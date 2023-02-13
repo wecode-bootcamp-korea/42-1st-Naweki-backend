@@ -3,23 +3,28 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const category = `${filter.category ?
-    `c.name = '${filter.category}'` : ' '}`
-  const sub_category = `${filter.sub_category ?
-    `sc.name = '${filter.sub_category}'` : ' '}`
+  const {
+    category,
+    sub_category,
+    gender,
+    limit,
+    offset,
+    sort } = filter
 
-  if (category !== ' ' && sub_category !== ' ') {
-    where.push(category)
-    where.push(sub_category)
-  } else if (category !== ' ') {
-    where.push(category)
-  } else if (sub_category !== ' ') {
-    where.push(sub_category)
-  }
+  category ? where.push(`c.name = '${category}'`) : ''
+  sub_category ? where.push(`sc.name = '${sub_category}'`) : ''
+  gender ? where.push(`g.type = '${gender}'`) : ''
 
   where = where.join(' AND ')
 
-  const { limit, offset } = filter
+  let sortSets = {
+    'productIdAsc': 'ORDER BY p.id ASC',
+    'productIdDesc': 'ORDER BY p.id DESC',
+    'priceDesc': 'ORDER BY p.price DESC',
+    'priceAsc': 'ORDER BY p.price ASC',
+    'newest': 'ORDER BY p.created_at DESC'
+  }
+
   const rawQuery = `
     SELECT
       p.id,
@@ -34,31 +39,49 @@ const getProducts = async (filter) => {
     ON p.sub_category_id = sc.id
     INNER JOIN categories c
     ON c.id = sc.category_id
+    INNER JOIN products_options po
+    ON po.product_id = p.id
+    INNER JOIN genders g
+    ON po.gender_id = g.id
     ${where.length ? `WHERE ${where}` : ' '}
-    ORDER BY p.id ASC
-    ${limit ? ` limit ${limit} ` : ' '}
-    ${offset ? ` offset ${offset} ` : ' '};`
+    GROUP BY p.id
+    ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
+    ${limit ? `limit ${limit}` : ' '}
+    ${offset ? `offset ${offset}` : ' '};`
 
   const products = await database.query(rawQuery)
 
   return products
 }
 
-const getProductOptions = async (productIds) => {
+const getProductOptions = async (productIds, filter) => {
   if (!productIds.length) return []
+
+  let where = []
+
+  const gender = filter.gender ? `g.type = '${filter.gender}'` : ' '
+  if (gender != ' ') {
+    where.push(gender)
+  }
+
+  const productId = `po.product_id IN(${Array(productIds.length).fill('?').join(',')
+    })`
+
+  where.push(productId)
+  where = where.join(' AND ')
 
   const rawQuery = `
   SELECT
     po.product_id id,
-    JSON_OBJECT(
-      'color_count', count(po.color_id),
-      'gender', g.type
-    ) options
-  FROM products_options po
-  LEFT JOIN colors c ON po.color_id = c.id
-  INNER JOIN genders g ON po.gender_id = g.id
-  WHERE po.product_id IN(${Array(productIds.length).fill('?').join(',')})
-  GROUP BY po.product_id, g.type;`
+      JSON_OBJECT(
+        'color_count', count(po.color_id),
+        'gender', g.type
+      ) options
+    FROM products_options po
+    LEFT JOIN colors c ON po.color_id = c.id
+    INNER JOIN genders g ON po.gender_id = g.id
+    WHERE ${where}
+    GROUP BY po.product_id, g.type; `
 
   const productOptions = await database.query(rawQuery, productIds)
 
