@@ -1,6 +1,9 @@
+const message = require('../error/userErrMsg')
+
 const globalErrorHandler = async (err, req, res, next) => {
   console.error(err.stack)
-  err.statusCode = err.statusCode || 500
+  err.statusCode = message[err.message]?.statusCode || 500
+  err.message = message[err.message]?.message
   res.status(err.statusCode).json({ message: err.message })
 }
 
