@@ -9,8 +9,7 @@ CREATE TABLE `order_items` (
 
   CONSTRAINT order_items_order_id_fk FOREIGN KEY (order_id) REFERENCES orders (id),
   CONSTRAINT order_items_product_id_fk FOREIGN KEY (product_id) REFERENCES products (id),
-  CONSTRAINT order_items_order_status_id_fk FOREIGN KEY (order_status_id) REFERENCES order_status (id),
-  CONSTRAINT order_items_order_item_status_code_id_uk UNIQUE (order_status_id)
+  CONSTRAINT order_items_order_status_id_fk FOREIGN KEY (order_status_id) REFERENCES order_status (id)
 )
 
 -- migrate:down
