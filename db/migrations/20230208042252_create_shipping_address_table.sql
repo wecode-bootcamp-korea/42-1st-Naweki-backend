@@ -10,7 +10,6 @@ CREATE TABLE `shipping_address` (
   `zone` varchar(20) NULL,
   `postal_code` varchar(20) NOT NULL,
   `phone_number` varchar(30) NOT NULL,
-  `country` varchar(20) NOT NULL,
   `email` varchar(30) NOT NULL,
   `is_default` boolean NOT NULL DEFAULT false,
   `user_id` int NOT NULL,
