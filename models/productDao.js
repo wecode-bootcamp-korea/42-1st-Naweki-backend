@@ -72,7 +72,6 @@ const getProducts = async (filter) => {
     ${offset ? `offset ${offset}` : ' '};`
 
   const products = await database.query(rawQueryTest)
-  console.log(products)
 
   return products
 }
