@@ -13,7 +13,7 @@ const getProducts = async (filter) => {
 
   category ? where.push(`c.name = '${category}'`) : ''
   sub_category ? where.push(`sc.name = '${sub_category}'`) : ''
-  gender ? where.push(`g.type = '${gender}'`) : ''
+  gender ? where.push(`p.gender = '${gender}'`) : ''
 
   where = where.join(' AND ')
 
@@ -24,6 +24,28 @@ const getProducts = async (filter) => {
     'priceAsc': 'ORDER BY p.price ASC',
     'newest': 'ORDER BY p.created_at DESC'
   }
+
+  const rawQueryTest = `
+  SELECT
+    p.id,
+    p.name,
+    p.price,
+    p.created_at,
+    p.thumbnail_image,
+    p.gender,
+    p.color,
+    sc.name sub_category,
+    c.name category
+  FROM products p
+  INNER JOIN sub_categories sc
+  ON sc.id = p.sub_category_id
+  INNER JOIN categories c
+  ON c.id = sc.category_id
+  ${where.length ? `WHERE ${where}` : ''}
+  ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
+  ${limit ? `limit ${limit}` : ' '}
+  ${offset ? `offset ${offset}` : ' '};`
+
 
   const rawQuery = `
     SELECT
@@ -49,42 +71,12 @@ const getProducts = async (filter) => {
     ${limit ? `limit ${limit}` : ' '}
     ${offset ? `offset ${offset}` : ' '};`
 
-  const products = await database.query(rawQuery)
+  const products = await database.query(rawQueryTest)
+  console.log(products)
 
   return products
 }
 
-const getProductOptions = async (productIds, filter) => {
-  if (!productIds.length) return []
-
-  let where = []
-
-  const { gender } = filter
-  const productId = `po.product_id IN(${Array(productIds.length)
-    .fill('?').join(',')})`
-
-  gender ? where.push(`g.type = '${gender}'`) : ''
-  where.push(productId)
-  where = where.join(' AND ')
-
-  const rawQuery = `
-  SELECT
-    po.product_id id,
-      JSON_OBJECT(
-        'color_count', count(po.color_id),
-        'gender', g.type
-      ) options
-    FROM products_options po
-    LEFT JOIN colors c ON po.color_id = c.id
-    INNER JOIN genders g ON po.gender_id = g.id
-    WHERE ${where}
-    GROUP BY po.product_id, g.type; `
-
-  const productOptions = await database.query(rawQuery, productIds)
-
-  return productOptions
-}
 module.exports = {
-  getProducts,
-  getProductOptions
+  getProducts
 }
