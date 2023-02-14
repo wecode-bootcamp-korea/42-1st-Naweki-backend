@@ -3,13 +3,6 @@ const { getCurrentTime, ONE_HOUR_IN_MILLISECONDS } = require('../utils/time')
 
 const getProducts = async (filter) => {
   const products = await productDao.getProducts(filter)
-  const productsIds = products.map(product => product.id)
-  const productOptions = await productDao.getProductOptions(productsIds, filter)
-
-  const productOptionsObj = {}
-  productOptions.forEach(po => {
-    productOptionsObj[po.id] = po.options
-  })
 
   const joinedProducts = products.map(product => ({
     id: product.id,
@@ -19,7 +12,6 @@ const getProducts = async (filter) => {
     isNew: isNewProduct(product.created_at),
     sub_category: product.category,
     category: product.sub_category,
-    options: productOptionsObj[product.id]
   }))
 
   return joinedProducts
