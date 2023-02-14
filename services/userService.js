@@ -41,8 +41,14 @@ const login = async (email, password) => {
   }
 }
 
+const postAddress = async (address) => {
+  userDao.postAddress(address)
+  return ''
+}
+
 module.exports = {
   signUp,
   getUser,
   login,
+  postAddress
 }

@@ -50,7 +50,17 @@ const getUser = async (email) => {
   return result
 }
 
+// 1. address field 값 별로 ? 생성
+// 2. adress filed 값 순서에 맞게 배열 생성하여 query 두번째 변수로 할당
+const postAddress = async (address) => {
+  const rawQuery = `
+  INSERT INTO shipping_address
+  `
+  return
+}
+
 module.exports = {
   signUp,
   getUser,
+  postAddress
 }
