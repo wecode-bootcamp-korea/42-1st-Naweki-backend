@@ -1,5 +1,5 @@
 const productDao = require('../models/productDao')
-const { getCurrentTime } = require('../utils/time')
+const { getCurrentTime, ONE_HOUR_IN_MILLISECONDS } = require('../utils/time')
 
 const getProducts = async (filter) => {
   const products = await productDao.getProducts(filter)
@@ -26,13 +26,10 @@ const getProducts = async (filter) => {
 }
 
 const isNewProduct = (productCreatedTime) => {
-  const timestamp = new Date(productCreatedTime).getTime()
   const currentTime = getCurrentTime()
-  const diff = new Date(currentTime - timestamp)
+  const productCreatedTimeInMs = new Date(productCreatedTime).getTime()
 
-  if (diff.getHours() < 1) return true
-
-  return false
+  return (currentTime - productCreatedTimeInMs) < ONE_HOUR_IN_MILLISECONDS
 }
 
 module.exports = {
