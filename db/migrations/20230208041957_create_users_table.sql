@@ -9,6 +9,7 @@ CREATE TABLE `users` (
   `shopping_preference` varchar(20) NOT NULL,
   `profile_image` varchar(20) NULL,
   `phone_number` varchar(20) NULL,
+  `country` varchar(20) NOT NULL,
   `gender` varchar(20) NULL,
   `point` decimal(12, 2) NOT NULL DEFAULT 1000000,
   `primary_address` varchar(20) NULL,
