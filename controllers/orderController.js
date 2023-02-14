@@ -1,39 +1,55 @@
 const { catchAsync } = require('../utils/error/handler')
-
-// Post /postAddress
-
-// 배송지 추가 버튼을 눌렀을 때
-// 1. 유저의 배송지 주소 추가하는 기능을 만든다 API 가 따로 있어야 하는지?
-// 2. 유저의 배송지가 있을때 주문하기 버튼을 누를 수 있어야 한다.
-// 배송지가 없을때는 주문하기 불가능.
-// 3. 회원가입한 유저만 주문하기 버튼을 누를 수 있다 (accessToken 검증)
-// 4. 배송지에서 필수 유저 정보는
-// 성, 이름, 도로명 주소, 도 / 광역시, 시 / 구 / 군, 우편번호, 전화번호, 이메일
-// 이다.
-// 5. 결제 수단은 유저의 point 컬럼에 해당하는 값으로 계산한다.
+const orderService = require('../services/orderService')
 
 // Post /order
 
 // 주문하기 버튼을 눌렀을 때
+// API 는 하나
+// uuid 는 서비스에서 생성
+// 확장성을 고려하면 배송지 API 구현하는게 좋을듯
 // Transaction 이용
-// 6 UUID 생성한다 uuid 모듈 이용 (order_items.order_id, orders.order_number)
+// 6. UUID 생성한다 uuid 모듈 이용 (order_items.order_id, orders.order_number)
 // 7. 장바구니(cart)에 있는 상품들을 하나씩
 // order_items 테이블에 추가한다.
-// 8. orders_items 에 추가한 아이템들을 포함하는 데이터를
+// 8. orders_items 에 추가한 아이템들을 포함하는 데이터를 토대로
 // orders 테이블에 같은 UUID 로 추가하고 orders.order_status_id 를 변경한다.
 // 9. orders.user_id 이용, 유저의 장바구니의 아이템들을 삭제한다.
 // 10. user의 최신 주문 내역을 response 로 준다 UUID 이용.
+// 주문하기에서 필요한 정보 1. 유저의 배송지 2. 주문 상품 목록 3. 주문 상품 목록의 가격의 합계
 
-// 1. 배송지 주소 저장 및 계속 APi
-const postUserAddress = catchAsync(async (req, res) => {
+// 주문하기 버튼 눌렀을때 필요한 정보
+// 1. 상품정보 2. 상품 가격의 합, 배송지 정보
 
+const insertCart = catchAsync(async (req, res) => {
+  const { user_id, product_options_id, quantity } = req.body
+
+  if (!user_id || !product_options_id || !quantity) {
+    throw new Error('keyErr')
+  }
+
+  orderService.insertCart(user_id, product_options_id, quantity)
+  return res.status('200').json({ message: 'insertCart' })
 })
 
-// 1. 주문하기 API
+// ### 주문하기 API
+// 1. token 에서 user_id 불러와서
+// cart 조회 -> 상품목록 가져와서 response
+// 2. token 에서 user_id 불러와서 배송지 정보 가져오기
+
+const getOrder = catchAsync(async (req, res) => {
+  const { id: userId } = req.user
+  console.log('userId:', userId)
+  const products = await orderService.getProductsFromCartByUserId(userId)
+  console.log(products)
+  return res.status('200').json({ message: 'getOrder' })
+})
+
 const postOrder = catchAsync(async (req, res) => {
-  console.log('postOrder')
+
 })
 
 module.exports = {
-  postOrder
+  getOrder,
+  postOrder,
+  insertCart
 }

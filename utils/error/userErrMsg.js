@@ -38,6 +38,16 @@ const messages = {
     statusCode: 400,
     message: 'FAILED_TO_LOGIN',
   },
+
+  failedToGetAddressErr: {
+    statusCode: 400,
+    message: 'FAILED_TO_GET_ADDRESS'
+  },
+
+  failedToPostAddressErr: {
+    statusCode: 400,
+    message: 'FAILED_TO_POST_ADDRESS'
+  }
 }
 
 module.exports = messages

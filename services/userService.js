@@ -33,7 +33,7 @@ const login = async (email, password) => {
     }
 
     const secretKey = process.env.SECRET_KEY
-    const payLoad = { id: userInfo.id }
+    const payLoad = { user_id: userInfo.id }
     const jwtToken = jwt.sign(payLoad, secretKey)
     return jwtToken
   } catch (err) {
@@ -41,14 +41,19 @@ const login = async (email, password) => {
   }
 }
 
+const getAddressByUserId = async (userId) => {
+  return await userDao.getAddressByUserId(userId)
+}
+
 const postAddress = async (address) => {
-  userDao.postAddress(address)
-  return ''
+  const result = userDao.postAddress(address)
+  return result
 }
 
 module.exports = {
   signUp,
   getUser,
   login,
-  postAddress
+  postAddress,
+  getAddressByUserId
 }

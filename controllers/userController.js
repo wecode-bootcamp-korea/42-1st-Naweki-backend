@@ -54,22 +54,17 @@ const login = catchAsync(async (req, res) => {
   return res.status(201).json({ JWT: token })
 })
 
-// Post /postAddress
-
-// 1. 유저의 배송지 주소 추가하는 기능을 만든다 API 가 따로 있어야 하는지?
-// 2. 유저의 배송지가 있을때 주문하기 버튼을 누를 수 있어야 한다.
-// 배송지가 없을때는 주문하기 불가능.
-// 3. 회원가입한 유저만 주문하기 버튼을 누를 수 있다 (accessToken 검증)
-// 4. 배송지에서 필수 유저 정보는
-// 성, 이름, 도로명 주소, 도 / 광역시, 시 / 구 / 군, 우편번호, 전화번호, 이메일
-// 이다.
-// 5. 결제 수단은 유저의 point 컬럼에 해당하는 값으로 계산한다.
-// 주문하기 버튼을 눌렀을 때
+const getAddress = catchAsync(async (req, res) => {
+  const result = await userService.getAddressByUserId(req.user.id)
+  if (!result) new Error('failedToGetAddressErr')
+  return res.status(200).json({ data: result })
+})
 
 const postAddress = catchAsync(async (req, res) => {
   const address = new Address(req.body)
 
-  userService.postAddress(address)
+  const result = await userService.postAddress(address)
+  if (!result) new Error('failedToPostAddressErr')
 
   return res.status(201).json({ message: 'post Address' })
 })
@@ -78,5 +73,6 @@ module.exports = {
   lookUp,
   signUp,
   login,
-  postAddress
+  postAddress,
+  getAddress
 }

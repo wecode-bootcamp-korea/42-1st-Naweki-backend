@@ -1,5 +1,6 @@
 const database = require('./index')
-const { failedToSignUpErr } = require('../utils/error/userErrMsg')
+const { camelToSnakeCase, wrapString } = require('../utils/utils')
+const Address = require('../classes/address')
 
 const signUp = async (user) => {
   try {
@@ -50,17 +51,68 @@ const getUser = async (email) => {
   return result
 }
 
-// 1. address field 값 별로 ? 생성
-// 2. adress filed 값 순서에 맞게 배열 생성하여 query 두번째 변수로 할당
+const getUserById = async (id) => {
+  const rawQuery = `
+    SELECT
+      id,
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      birthday,
+      point
+    FROM users WHERE id = ?;`
+
+  const [result] = await database.query(rawQuery, [id])
+  return result
+}
+
+const getAddressByUserId = async (userId) => {
+  const address = new Address()
+  const keys = []
+
+  Object.keys(address).forEach(k => keys.push('`' + camelToSnakeCase(k) + '`'))
+
+  const rawQuery = `
+  SELECT
+    ${keys ? keys.join(',') : ''}
+  FROM shipping_address
+  WHERE user_id = ?;`
+
+  const result = await database.query(rawQuery, userId)
+
+  return result
+}
+
 const postAddress = async (address) => {
+  const keys = []
+  const values = []
+
+  for (let [k, v] of Object.entries(address)) {
+    keys.push('`' + (camelToSnakeCase(k)) + '`')
+    values.push(v)
+  }
+
+  const columns = keys.join(',')
+
+  const queries = Array(keys.length).fill('?').join(',')
+
   const rawQuery = `
   INSERT INTO shipping_address
-  `
-  return
+  (${columns.length ? columns : ''})
+  VALUES
+  (${queries.length ? queries : ''}); `
+
+  const result = await database.query(rawQuery, values)
+
+  return result
 }
 
 module.exports = {
   signUp,
   getUser,
-  postAddress
+  getUserById,
+  postAddress,
+  getAddressByUserId
 }
