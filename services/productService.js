@@ -3,15 +3,15 @@ const { getCurrentTime, ONE_HOUR_IN_MILLISECONDS } = require('../utils/time')
 
 const getProducts = async (filter) => {
   const products = await productDao.getProducts(filter)
-  const productsIds = products.map(product => product.id)
+  const productsIds = products.map((product) => product.id)
   const productOptions = await productDao.getProductOptions(productsIds, filter)
 
   const productOptionsObj = {}
-  productOptions.forEach(po => {
+  productOptions.forEach((po) => {
     productOptionsObj[po.id] = po.options
   })
 
-  const joinedProducts = products.map(product => ({
+  const joinedProducts = products.map((product) => ({
     id: product.id,
     name: product.name,
     price: Math.ceil(product.price),
@@ -19,7 +19,7 @@ const getProducts = async (filter) => {
     isNew: isNewProduct(product.created_at),
     sub_category: product.category,
     category: product.sub_category,
-    options: productOptionsObj[product.id]
+    options: productOptionsObj[product.id],
   }))
 
   return joinedProducts
@@ -29,9 +29,16 @@ const isNewProduct = (productCreatedTime) => {
   const currentTime = getCurrentTime()
   const productCreatedTimeInMs = new Date(productCreatedTime).getTime()
 
-  return (currentTime - productCreatedTimeInMs) < ONE_HOUR_IN_MILLISECONDS
+  return currentTime - productCreatedTimeInMs < ONE_HOUR_IN_MILLISECONDS
+}
+
+const getDetails = async (productId) => {
+  const product = await productDao.getDetails(productId)
+
+  return product
 }
 
 module.exports = {
-  getProducts
+  getProducts,
+  getDetails,
 }

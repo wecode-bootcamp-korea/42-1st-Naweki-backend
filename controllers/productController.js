@@ -11,7 +11,7 @@ const getProducts = catchAsync(async (req, res) => {
     gender: gender,
     limit: limit,
     offset: offset,
-    sort: sort
+    sort: sort,
   }
 
   const products = await productService.getProducts(filter)
@@ -30,6 +30,14 @@ const getPageAndLimit = (req) => {
   return [limit, offset]
 }
 
+const getDetails = catchAsync(async (req, res) => {
+  const { productId } = req.params
+
+  const details = await productService.getDetails(productId)
+  return res.status(200).json({ product: details })
+})
+
 module.exports = {
-  getProducts
+  getProducts,
+  getDetails,
 }
