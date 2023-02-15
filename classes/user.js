@@ -11,17 +11,13 @@ class User {
   }
 
   keyCheck() {
-    if (
-      !this.firstName ||
-      !this.lastName ||
-      !this.email ||
-      !this.password ||
-      !this.shoppingPreference ||
-      !this.birthday
-    )
-      return false
-
-    return true
+    return Boolean(
+      this.firstName &&
+      this.lastName &&
+      this.email &&
+      this.password &&
+      this.shoppingPreference &&
+      this.birthday)
   }
 }
 

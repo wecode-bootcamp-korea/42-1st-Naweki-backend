@@ -86,17 +86,17 @@ const getAddressByUserId = async (userId) => {
 }
 
 const postAddress = async (address) => {
-  const keys = []
-  const values = []
+  const addressKeys = []
+  const addressValues = []
 
-  for (let [k, v] of Object.entries(address)) {
-    keys.push('`' + (camelToSnakeCase(k)) + '`')
-    values.push(v)
+  for (let [addressKey, addressValue] of Object.entries(address)) {
+    addressKeys.push('`' + (camelToSnakeCase(addressKey)) + '`')
+    addressValues.push(addressValue)
   }
 
-  const columns = keys.join(',')
+  const columns = addressKeys.join(',')
 
-  const queries = Array(keys.length).fill('?').join(',')
+  const queries = Array(addressKeys.length).fill('?').join(',')
 
   const rawQuery = `
   INSERT INTO shipping_address

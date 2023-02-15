@@ -1,4 +1,5 @@
 const database = require('./index')
+const { OrderStatusEnum } = require('../utils/enum')
 
 const getOrderFromCart = async (userId) => {
   const rawQuery = `
@@ -48,14 +49,6 @@ const getOptionsByProductIds = async (productIds) => {
 
   return options
 }
-
-// 1. UUID  생성
-// 2. tracsaction start
-// 3. insert postorder
-// 4. insert postorderitem
-// 5. delete cart
-// 7 포인트차감
-// 6. get orders (response)
 
 const getOrder = async (queryRunner, orderId) => {
   const rawQuery = `
@@ -107,9 +100,14 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
         order_status_id)
     VALUES(?, ?, ?, ?, ?, ?);`
 
-    const orderStatusId = 1
     const { affectedRows, insertId: orderId } = await queryRunner
-      .query(rawQuery, [orderNumber, user.id, user.email, 'point', paymentAmount, orderStatusId])
+      .query(rawQuery,
+        [orderNumber,
+          user.id,
+          user.email,
+          'point',
+          paymentAmount,
+          OrderStatusEnum.COMPLETE])
 
     if (!affectedRows) throw new Error('Not Inserted')
 
@@ -156,8 +154,8 @@ const deleteCartByUserId = async (queryRunner, userId) => {
 
 const getPaymentAmount = (cart) => {
   let paymentAmount = 0
-  cart.forEach(c => {
-    paymentAmount += c.productPrice
+  cart.forEach(cart => {
+    paymentAmount += cart.productPrice
   })
 
   return paymentAmount
@@ -168,7 +166,7 @@ const calcUserPoint = async (queryRunner, user, paymentAmount) => {
   UPDATE users SET point = point - ? WHERE id = ?;`
 
   const { affectedRows } = await queryRunner.query(rawQuery, [paymentAmount, user.id])
-  if (!affectedRows) throw new Error('NOT_UPDATED_USER_POINT')
+  if (affectedRows == 1) throw new Error('NOT_UPDATED_USER_POINT')
 
   return
 }

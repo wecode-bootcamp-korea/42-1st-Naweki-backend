@@ -13,7 +13,7 @@ const validateToken = (req, res, next) => {
       throw new Error('invalidAccessTokenErr')
     }
 
-    const result = await userDao.getUserById(decoded.user_id)
+    const result = await userDao.getUserById(decoded.id)
     const user = new User(result)
     req.user = user
     next()

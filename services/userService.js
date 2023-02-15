@@ -33,7 +33,7 @@ const login = async (email, password) => {
     }
 
     const secretKey = process.env.SECRET_KEY
-    const payLoad = { user_id: userInfo.id }
+    const payLoad = { id: userInfo.id }
     const jwtToken = jwt.sign(payLoad, secretKey)
     return jwtToken
   } catch (err) {
