@@ -40,6 +40,30 @@ const getProducts = async (filter) => {
   ${limit ? `limit ${limit}` : ' '}
   ${offset ? `offset ${offset}` : ' '};`
 
+  const rawQuery = `
+    SELECT
+      p.id,
+      p.name,
+      p.price,
+      p.created_at,
+      p.thumbnail_image,
+      sc.name subCategory,
+      c.name category
+    FROM products p
+    INNER JOIN sub_categories sc
+    ON p.sub_category_id = sc.id
+    INNER JOIN categories c
+    ON c.id = sc.category_id
+    INNER JOIN products_options po
+    ON po.product_id = p.id
+    INNER JOIN genders g
+    ON product.gender_id = g.id
+    ${where.length ? `WHERE ${where}` : ' '}
+    GROUP BY p.id
+    ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
+    ${limit ? `limit ${limit}` : ' '}
+    ${offset ? `offset ${offset}` : ' '};`
+    
   const products = await database.query(rawQuery)
 
   return products
@@ -51,28 +75,26 @@ const getProductDetails = async (productId) => {
     SELECT
       p.id,
       p.name,
-      CONCAT(g.type, ' ', mc.name) as subName,
+      CONCAT(p.gender, ' ', mc.name) as subName,
       p.price,
       p.thumbnail_image as thumbnailImage,
       sc.name as subCategory,
       mc.name as mainCategory,
       p.description,
-      c.type as currentColor,
+      p.color as currentColor,
       p.style_code as styleCode,
       p.discount_rate as discountRate,
       p.created_at as createdAt,
+      p.updated_at as updatedAt,
       GROUP_CONCAT(pi.url) as imageUrl
     FROM products p
-    INNER JOIN products_images pi ON pi.product_id = p.id
-    INNER JOIN products_options po ON po.product_id = p.id
-    INNER JOIN sub_categories sc ON p.sub_category_id = sc.id
-    INNER JOIN categories mc ON sc.category_id = mc.id
-    INNER JOIN genders g ON po.gender_id = g.id AND po.product_id = p.id
-    INNER JOIN colors c ON po.color_id = c.id AND po.product_id = p.id
-    INNER JOIN sizes sv ON po.size_id = sv.id AND po.product_id = p.id
-    where p.id = 1
-    GROUP BY p.id, g.type, sv.value, po.quantity, c.type;
+    JOIN sub_categories sc ON p.sub_category_id = sc.id
+    JOIN categories mc ON sc.category_id = mc.id
+    LEFT JOIN products_images pi ON pi.product_id = p.id
+    WHERE p.id = ?
+    GROUP BY p.id;
     `
+
     const [product] = await database.query(productQuery, [productId])
 
     const productStockQuery = `
@@ -81,7 +103,7 @@ const getProductDetails = async (productId) => {
       SUM(a.quantity) as count
     FROM products_options a
     JOIN sizes b ON a.size_id = b.id
-    WHERE a.product_id = 1
+    WHERE a.product_id = ?
     GROUP BY b.value;
     `
 
