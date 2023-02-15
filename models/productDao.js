@@ -27,7 +27,6 @@ const getProducts = async (filter) => {
     newest: 'ORDER BY p.created_at DESC',
   }
 
-  console.log('here')
   const rawQuery = `
   SELECT
     p.id,
@@ -49,7 +48,6 @@ const getProducts = async (filter) => {
   ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
   ${limit ? `limit ${limit}` : ' '}
   ${offset ? `offset ${offset}` : ' '};`
-  console.log(rawQuery)
 
   const products = await database.query(rawQuery)
 
