@@ -7,8 +7,8 @@ const getProducts = async (filter) => {
   const productOptions = await productDao.getProductOptions(productsIds, filter)
 
   const productOptionsObj = {}
-  productOptions.forEach((po) => {
-    productOptionsObj[po.id] = po.options
+  productOptions.forEach((product) => {
+    productOptionsObj[product.id] = product.options
   })
 
   const joinedProducts = products.map((product) => ({
@@ -17,8 +17,8 @@ const getProducts = async (filter) => {
     price: Math.ceil(product.price),
     thumbnail_image: product.thumbnail_image,
     isNew: isNewProduct(product.created_at),
-    sub_category: product.category,
-    category: product.sub_category,
+    subCategory: product.category,
+    category: product.subCategory,
     options: productOptionsObj[product.id],
   }))
 
@@ -32,13 +32,13 @@ const isNewProduct = (productCreatedTime) => {
   return currentTime - productCreatedTimeInMs < ONE_HOUR_IN_MILLISECONDS
 }
 
-const getDetails = async (productId) => {
-  const product = await productDao.getDetails(productId)
+const getProductDetails = async (productId) => {
+  const product = await productDao.getProductDetails(productId)
 
   return product
 }
 
 module.exports = {
   getProducts,
-  getDetails,
+  getProductDetails,
 }

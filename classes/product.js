@@ -10,10 +10,9 @@ class Product {
   }
 
   keyCheck() {
-    if (!this.name || !this.price || !this.description || !this.styleCode)
-      return false
-
-    return true
+    return Boolean(
+      this.name && this.price && this.description && this.styleCode
+    )
   }
 }
 

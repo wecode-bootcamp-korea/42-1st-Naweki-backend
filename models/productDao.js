@@ -3,10 +3,10 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const { category, sub_category, gender, limit, offset, sort } = filter
+  const { category, subCategory, gender, limit, offset, sort } = filter
 
   category ? where.push(`c.name = '${category}'`) : ''
-  sub_category ? where.push(`sc.name = '${sub_category}'`) : ''
+  subCategory ? where.push(`sc.name = '${subCategory}'`) : ''
   gender ? where.push(`g.type = '${gender}'`) : ''
 
   where = where.join(' AND ')
@@ -26,7 +26,7 @@ const getProducts = async (filter) => {
       p.price,
       p.created_at,
       p.thumbnail_image,
-      sc.name sub_category,
+      sc.name subCategory,
       c.name category
     FROM products p
     INNER JOIN sub_categories sc
@@ -36,7 +36,7 @@ const getProducts = async (filter) => {
     INNER JOIN products_options po
     ON po.product_id = p.id
     INNER JOIN genders g
-    ON po.gender_id = g.id
+    ON product.gender_id = g.id
     ${where.length ? `WHERE ${where}` : ' '}
     GROUP BY p.id
     ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
@@ -80,7 +80,7 @@ const getProductOptions = async (productIds, filter) => {
   return productOptions
 }
 
-const getDetails = async (productId) => {
+const getProductDetails = async (productId) => {
   try {
     const productQuery = `
     SELECT
@@ -152,5 +152,5 @@ const getDetails = async (productId) => {
 module.exports = {
   getProducts,
   getProductOptions,
-  getDetails,
+  getProductDetails,
 }
