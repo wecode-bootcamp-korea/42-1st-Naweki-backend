@@ -19,6 +19,28 @@ const getProducts = async (filter) => {
     newest: 'ORDER BY p.created_at DESC',
   }
 
+  const rawQueryTest = `
+  SELECT
+    p.id,
+    p.name,
+    p.price,
+    p.created_at,
+    p.thumbnail_image,
+    p.gender,
+    p.color,
+    sc.name sub_category,
+    c.name category
+  FROM products p
+  INNER JOIN sub_categories sc
+  ON sc.id = p.sub_category_id
+  INNER JOIN categories c
+  ON c.id = sc.category_id
+  ${where.length ? `WHERE ${where}` : ''}
+  ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
+  ${limit ? `limit ${limit}` : ' '}
+  ${offset ? `offset ${offset}` : ' '};`
+
+
   const rawQuery = `
     SELECT
       p.id,
@@ -43,7 +65,7 @@ const getProducts = async (filter) => {
     ${limit ? `limit ${limit}` : ' '}
     ${offset ? `offset ${offset}` : ' '};`
 
-  const products = await database.query(rawQuery)
+  const products = await database.query(rawQueryTest)
 
   return products
 }
