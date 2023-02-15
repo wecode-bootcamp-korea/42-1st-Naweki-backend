@@ -1,4 +1,3 @@
-const { raw } = require('express')
 const database = require('./index')
 
 const insertCart = async (userId, productOptionsId) => {
@@ -16,13 +15,14 @@ const getProductsFromCartByUserId = async (userId) => {
   SELECT
     id,
     user_id,
-    product_options_id,
+    product_id,
     quantity,
     created_at,
     updated_at
   FROM cart WHERE user_id = ?;`
-
-  return await database.query(rawQuery, userId)
+  const products = await database.query(rawQuery, userId)
+  console.log(products)
+  return products
 }
 
 const postOrder = async () => {

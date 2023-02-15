@@ -38,10 +38,9 @@ const insertCart = catchAsync(async (req, res) => {
 
 const getOrder = catchAsync(async (req, res) => {
   const { id: userId } = req.user
-  console.log('userId:', userId)
+  console.log('', userId)
   const products = await orderService.getProductsFromCartByUserId(userId)
-  console.log(products)
-  return res.status('200').json({ message: 'getOrder' })
+  return res.status('200').json({ message: products })
 })
 
 const postOrder = catchAsync(async (req, res) => {
