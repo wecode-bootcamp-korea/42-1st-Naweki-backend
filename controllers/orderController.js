@@ -36,19 +36,29 @@ const insertCart = catchAsync(async (req, res) => {
 // cart 조회 -> 상품목록 가져와서 response
 // 2. token 에서 user_id 불러와서 배송지 정보 가져오기
 
-const getOrder = catchAsync(async (req, res) => {
+const getOrderFromCart = catchAsync(async (req, res) => {
   const { id: userId } = req.user
-  console.log('', userId)
-  const products = await orderService.getProductsFromCartByUserId(userId)
-  return res.status('200').json({ message: products })
+  const order = await orderService.getOrderFromCart(userId)
+  return res.status(200).json({ data: order })
 })
 
-const postOrder = catchAsync(async (req, res) => {
+const isEmpty = (obj) => {
+  return Object.keys(obj).length == 0
+}
 
+const postOrder = catchAsync(async (req, res) => {
+  const { cart, shippingAddress } = req.body
+  if (!cart || !shippingAddress) throw new Error('keyErr')
+  if (isEmpty(shippingAddress)) throw new Error('emptyAddressErr')
+  if (isEmpty(cart)) throw new Error('EMPTY_CART')
+
+  const order = orderService.postOrder(req.user, shippingAddress, cart)
+
+  return res.status(200).json({ data: [] })
 })
 
 module.exports = {
-  getOrder,
+  getOrderFromCart,
   postOrder,
   insertCart
 }

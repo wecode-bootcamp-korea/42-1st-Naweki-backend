@@ -1,4 +1,4 @@
-const message = require('../error/userErrMsg')
+const message = require('../error/globalErrMsg')
 
 const globalErrorHandler = async (err, req, res, next) => {
   console.error(err)

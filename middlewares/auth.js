@@ -5,7 +5,7 @@ const User = require('../classes/user')
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers
   if (!authorization) {
-    throw new Error('noAccessTokenErr')
+    throw new Error('noAuthorizationErr')
   }
 
   jwt.verify(authorization, process.env.SECRET_KEY, async (err, decoded) => {
