@@ -32,9 +32,9 @@ const getOrderFromCart = async (userId) => {
   return joinedOrder
 }
 
-const postOrder = async (user, shippingAddress, cart) => {
+const postOrders = async (user, shippingAddress, cart) => {
   const orderNumber = uuidv4()
-  return await orderDao.postOrder(user, shippingAddress, cart, orderNumber)
+  return await orderDao.postOrders(user, shippingAddress, cart, orderNumber)
 }
 
 const insertCart = async (userId, productOptionsId) => {
@@ -44,6 +44,6 @@ const insertCart = async (userId, productOptionsId) => {
 
 module.exports = {
   getOrderFromCart,
-  postOrder,
+  postOrders,
   insertCart
 }

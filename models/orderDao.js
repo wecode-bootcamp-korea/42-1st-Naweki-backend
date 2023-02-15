@@ -1,3 +1,4 @@
+const { query } = require('express')
 const database = require('./index')
 
 const insertCart = async (userId, productOptionsId) => {
@@ -65,48 +66,61 @@ const getOptionsByProductIds = async (productIds) => {
 // 4. insert postorder
 // 5. delete cart
 
-const postOrder = async (user, shippingAddress, cart, orderNumber) => {
-  // create a new query runner
+const postOrders = async (user, shippingAddress, cart, orderNumber) => {
   const queryRunner = database.createQueryRunner()
   await queryRunner.connect()
   await queryRunner.startTransaction()
-  console.log(rawData)
-  // Field
-  // ---------------
-  //   id
-  // quantity
-  // price
-  // order_id
-  // product_id
-  // order_status_id
+
+  console.log(orderNumber)
+
   try {
-    const rawData = await queryRunner.manager.query(`
-      INSERT INTO order_items
-      (quantity, price, order_id, product_id, order_status_id)
-    ;`)
-    // queryRunner.commitTransaction()
-  } catch {
-    queryRunner.rollbackTransaction()
+    // const { affectedRows, insertId } = await queryRunner.query(rawQuery, values)
+    //  await queryRunner.commitTransaction()
+  } catch (err) {
+    console.error(err)
+    await queryRunner.rollbackTransaction()
   } finally {
-    queryRunner.release()
+    await queryRunner.release()
   }
-
-  // try {
-  //   // execute some operations on this transaction:
-  //   // await queryRunner.manager.save(user2)
-  //   // await queryRunner.manager.save(photos)
-
-  //   // commit transaction now:
-  //   await queryRunner.commitTransaction()
-
-  // 1 postOrderItem
-
-  // 2 postOrder
-
-  // 3 deleteCart
 
   return
 }
+
+// try {
+
+//   const orderItemsColumns = [
+//     'quantity',
+//     'price',
+//     'order_id',
+//     'product_id',
+//     'order_status_id']
+
+//   table = 'order_items'
+//   columns = orderItemsColumns.join(',')
+//   queries = Array(orderItemsColumns.length).fill('?').join(',')
+//   const rawQuery = `
+//       INSERT INTO
+//       ${table} ${columns}
+//       VALUES
+//       (${queries});`
+
+//   console.log(rawQuery)
+
+
+// try {
+//   // execute some operations on this transaction:
+//   // await queryRunner.manager.save(user2)
+//   // await queryRunner.manager.save(photos)
+
+//   // commit transaction now:
+//   await queryRunner.commitTransaction()
+
+// 1 postOrderItem
+
+// 2 postOrder
+
+// 3 deleteCart
+
 
 const postOrderItem = async (user, shippingAddress, cart) => {
   return
@@ -115,9 +129,10 @@ const postOrderItem = async (user, shippingAddress, cart) => {
 const deleteCart = async (user, shippingAddress, cart) => {
   return
 }
+
 module.exports = {
   getOrderFromCart,
-  postOrder,
+  postOrders,
   getProductsByProductIds,
   getOptionsByProductIds,
   insertCart

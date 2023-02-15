@@ -5,7 +5,7 @@ const { validateToken } = require('../middlewares/auth')
 const router = express.Router()
 
 router.get('/', validateToken, orderController.getOrderFromCart)
-router.post('/', validateToken, orderController.postOrder)
+router.post('/', validateToken, orderController.postOrders)
 router.post('/cart', orderController.insertCart)
 
 module.exports = router
