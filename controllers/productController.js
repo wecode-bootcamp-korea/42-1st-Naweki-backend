@@ -2,16 +2,16 @@ const { catchAsync } = require('../utils/error/handler')
 const productService = require('../services/productService')
 
 const getProducts = catchAsync(async (req, res) => {
-  const { category, sub_category, gender, sort } = req.query
+  const { category, subCategory, gender, sort } = req.query
   const [limit, offset] = getPageAndLimit(req)
 
   const filter = {
     category: category,
-    sub_category: sub_category,
+    sub_category: subCategory,
     gender: gender,
     limit: limit,
     offset: offset,
-    sort: sort
+    sort: sort,
   }
 
   const products = await productService.getProducts(filter)
@@ -30,6 +30,14 @@ const getPageAndLimit = (req) => {
   return [limit, offset]
 }
 
+const getProductDetails = catchAsync(async (req, res) => {
+  const { productId } = req.params
+
+  const details = await productService.getProductDetails(productId)
+  return res.status(200).json({ product: details })
+})
+
 module.exports = {
-  getProducts
+  getProducts,
+  getProductDetails,
 }

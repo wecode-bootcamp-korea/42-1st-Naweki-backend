@@ -34,7 +34,7 @@ const messages = {
     message: 'INVALID_PASSWORD',
   },
 
-  failedToLogin: {
+  failedToLoginErr: {
     statusCode: 400,
     message: 'FAILED_TO_LOGIN',
   },
