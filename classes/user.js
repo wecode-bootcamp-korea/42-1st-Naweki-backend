@@ -1,11 +1,11 @@
 class User {
   constructor(userInfo) {
     this.id = userInfo?.id
-    this.firstName = userInfo?.first_name
-    this.lastName = userInfo?.last_name
+    this.firstName = userInfo?.firstName
+    this.lastName = userInfo?.lastName
     this.email = userInfo?.email
     this.password = userInfo?.password
-    this.shoppingPreference = userInfo?.shopping_preference
+    this.shoppingPreference = userInfo?.shoppingPreference
     this.birthday = userInfo?.birthday
   }
 
