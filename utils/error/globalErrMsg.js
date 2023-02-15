@@ -71,6 +71,16 @@ const messages = {
   emptyAddressErr: {
     statusCode: 400,
     message: 'EMPTY_ADDRESS'
+  },
+
+  emptyCartErr: {
+    statusCode: 400,
+    message: 'EMPTY_CART'
+  },
+
+  orderFailedErr: {
+    statusCode: 400,
+    message: 'FAILED_TO_ORDER'
   }
 
   // orderErrMsg End

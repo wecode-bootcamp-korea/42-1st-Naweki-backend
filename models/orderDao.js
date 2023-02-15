@@ -60,7 +60,7 @@ const getOrder = async (queryRunner, orderId) => {
     'paymetnMethod', o.payment_method
 	) \`order\`,
 	JSON_OBJECT(
-    'userId', u.id,
+    'id', u.id,
     'name', CONCAT(u.last_name, u.first_name),
     'email', u.email,
     'point', u.point
