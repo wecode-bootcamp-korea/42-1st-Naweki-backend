@@ -3,11 +3,19 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const { category, subCategory, gender, limit, offset, sort } = filter
+  const {
+    category,
+    subCategory,
+    gender,
+    color,
+    limit,
+    offset,
+    sort } = filter
 
   category ? where.push(`c.name = '${category}'`) : ''
   subCategory ? where.push(`sc.name = '${subCategory}'`) : ''
-  gender ? where.push(`g.type = '${gender}'`) : ''
+  gender ? where.push(`p.gender = '${gender}'`) : ''
+  color ? where.push(`p.color = '${color}'`) : ''
 
   where = where.join(' AND ')
 
@@ -40,30 +48,6 @@ const getProducts = async (filter) => {
   ${limit ? `limit ${limit}` : ' '}
   ${offset ? `offset ${offset}` : ' '};`
 
-  const rawQuery = `
-    SELECT
-      p.id,
-      p.name,
-      p.price,
-      p.created_at,
-      p.thumbnail_image,
-      sc.name subCategory,
-      c.name category
-    FROM products p
-    INNER JOIN sub_categories sc
-    ON p.sub_category_id = sc.id
-    INNER JOIN categories c
-    ON c.id = sc.category_id
-    INNER JOIN products_options po
-    ON po.product_id = p.id
-    INNER JOIN genders g
-    ON product.gender_id = g.id
-    ${where.length ? `WHERE ${where}` : ' '}
-    GROUP BY p.id
-    ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
-    ${limit ? `limit ${limit}` : ' '}
-    ${offset ? `offset ${offset}` : ' '};`
-    
   const products = await database.query(rawQuery)
 
   return products

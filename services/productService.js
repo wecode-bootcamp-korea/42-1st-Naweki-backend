@@ -11,6 +11,7 @@ const getProducts = async (filter) => {
     thumbnailImage: product.thumbnailImage,
     subCategory: product.subCategory,
     mainCategory: product.mainCategory,
+    color: product.color,
     isNew: isNewProduct(product.createdAt),
     updatedAt: product.updatedAt
   }))
