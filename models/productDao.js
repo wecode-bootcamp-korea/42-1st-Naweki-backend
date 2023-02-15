@@ -123,7 +123,7 @@ const getProductDetails = async (productId) => {
     JOIN sub_categories sc ON p.sub_category_id = sc.id
     JOIN categories mc ON sc.category_id = mc.id
     LEFT JOIN products_images pi ON pi.product_id = p.id
-    WHERE p.id = 1
+    WHERE p.id = ?
     GROUP BY p.id;
     `
 
@@ -135,7 +135,7 @@ const getProductDetails = async (productId) => {
       SUM(a.quantity) as count
     FROM products_options a
     JOIN sizes b ON a.size_id = b.id
-    WHERE a.product_id = 1
+    WHERE a.product_id = ?
     GROUP BY b.value;
     `
 
