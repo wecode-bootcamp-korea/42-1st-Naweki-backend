@@ -40,30 +40,6 @@ const getProducts = async (filter) => {
   ${limit ? `limit ${limit}` : ' '}
   ${offset ? `offset ${offset}` : ' '};`
 
-  const rawQuery = `
-    SELECT
-      p.id,
-      p.name,
-      p.price,
-      p.created_at,
-      p.thumbnail_image,
-      sc.name subCategory,
-      c.name category
-    FROM products p
-    INNER JOIN sub_categories sc
-    ON p.sub_category_id = sc.id
-    INNER JOIN categories c
-    ON c.id = sc.category_id
-    INNER JOIN products_options po
-    ON po.product_id = p.id
-    INNER JOIN genders g
-    ON product.gender_id = g.id
-    ${where.length ? `WHERE ${where}` : ' '}
-    GROUP BY p.id
-    ${sortSets[sort] ? sortSets[sort] : 'ORDER BY p.id ASC'}
-    ${limit ? `limit ${limit}` : ' '}
-    ${offset ? `offset ${offset}` : ' '};`
-    
   const products = await database.query(rawQuery)
 
   return products
@@ -99,12 +75,13 @@ const getProductDetails = async (productId) => {
 
     const productStockQuery = `
     SELECT
+      b.id,
       b.value as size,
       SUM(a.quantity) as count
     FROM products_options a
     JOIN sizes b ON a.size_id = b.id
     WHERE a.product_id = ?
-    GROUP BY b.value;
+    GROUP BY b.id;
     `
 
     const stock = await database.query(productStockQuery, [productId])
@@ -138,5 +115,5 @@ const getProductDetails = async (productId) => {
 
 module.exports = {
   getProducts,
-  getProductDetails
+  getProductDetails,
 }
