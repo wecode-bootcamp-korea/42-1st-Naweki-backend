@@ -1,5 +1,6 @@
-const { catchAsync } = require('../utils/error/handler')
 const orderService = require('../services/orderService')
+const { catchAsync } = require('../utils/error/handler')
+const { isEmpty } = require('../utils/utils')
 
 const getOrderFromCart = catchAsync(async (req, res) => {
   const { id: userId } = req.user
@@ -24,11 +25,7 @@ const postOrders = catchAsync(async (req, res) => {
   return res.status(200).json({ data: order })
 })
 
-const isEmpty = (obj) => {
-  return Object.keys(obj).length == 0
-}
-
 module.exports = {
   getOrderFromCart,
-  postOrders
+  postOrders,
 }
