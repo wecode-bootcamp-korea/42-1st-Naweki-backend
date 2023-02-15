@@ -29,7 +29,7 @@ const getProducts = async (filter) => {
     p.gender,
     p.color,
     sc.name subCategory,
-    c.name category
+    c.name mainCategory
   FROM products p
   INNER JOIN sub_categories sc
   ON sc.id = p.sub_category_id

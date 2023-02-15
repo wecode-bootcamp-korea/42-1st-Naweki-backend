@@ -10,7 +10,7 @@ const getProducts = async (filter) => {
     price: Math.ceil(product.price),
     thumbnailImage: product.thumbnailImage,
     subCategory: product.subCategory,
-    category: product.category,
+    mainCategory: product.mainCategory,
     isNew: isNewProduct(product.createdAt),
     updatedAt: product.updatedAt
   }))
