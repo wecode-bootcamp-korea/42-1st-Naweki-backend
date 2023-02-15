@@ -12,7 +12,7 @@ const getProducts = async (filter) => {
     subCategory: product.subCategory,
     mainCategory: product.mainCategory,
     isNew: isNewProduct(product.createdAt),
-    updatedAt: product.updatedAt
+    updatedAt: product.updatedAt,
   }))
 
   return products

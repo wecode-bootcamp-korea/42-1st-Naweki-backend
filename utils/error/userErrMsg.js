@@ -38,6 +38,16 @@ const messages = {
     statusCode: 400,
     message: 'FAILED_TO_LOGIN',
   },
+
+  failedToAddItem: {
+    statusCode: 400,
+    message: 'FAILED_TO_ADD_ITEM',
+  },
+
+  failedToDeleteItem: {
+    statusCode: 400,
+    message: 'FAILED_TO_DELETE_ITEM',
+  },
 }
 
 module.exports = messages
