@@ -1,17 +1,6 @@
 const { catchAsync } = require('../utils/error/handler')
 const orderService = require('../services/orderService')
 
-const insertCart = catchAsync(async (req, res) => {
-  const { user_id, product_options_id, quantity } = req.body
-
-  if (!user_id || !product_options_id || !quantity) {
-    throw new Error('keyErr')
-  }
-
-  orderService.insertCart(user_id, product_options_id, quantity)
-  return res.status('200').json({ message: 'insertCart' })
-})
-
 const getOrderFromCart = catchAsync(async (req, res) => {
   const { id: userId } = req.user
   const order = await orderService.getOrderFromCart(userId)
@@ -41,6 +30,5 @@ const isEmpty = (obj) => {
 
 module.exports = {
   getOrderFromCart,
-  postOrders,
-  insertCart
+  postOrders
 }
