@@ -1,15 +1,4 @@
-const { query } = require('express')
 const database = require('./index')
-
-const insertCart = async (userId, productOptionsId) => {
-  const rawQuery = `
-  INSERT INTO cart
-  (user_id, product_options_id, quantity)
-  VALUES
-  (?, ?, ?)`
-
-  return await database.query(rawQuery, [userId, productOptionsId, 1])
-}
 
 const getOrderFromCart = async (userId) => {
   const rawQuery = `
@@ -62,9 +51,43 @@ const getOptionsByProductIds = async (productIds) => {
 
 // 1. UUID  생성
 // 2. tracsaction start
-// 3. insert postorderitem
-// 4. insert postorder
+// 3. insert postorder
+// 4. insert postorderitem
 // 5. delete cart
+// 7 포인트차감
+// 6. get orders (response)
+
+const getOrder = async (queryRunner, orderId) => {
+  const rawQuery = `
+  SELECT
+	JSON_OBJECT (
+    'id', o.id,
+    'orderNumber', o.order_number,
+    'userId', o.user_id,
+    'paymetnMethod', o.payment_method
+	) \`order\`,
+	JSON_OBJECT(
+    'userId', u.id,
+    'name', CONCAT(u.last_name, u.first_name),
+    'email', u.email,
+    'point', u.point
+	) \`user\`,
+	JSON_OBJECT(
+    'primary', sa.primary,
+    'secondary', sa.secondary,
+    'email', sa.email,
+    'phoneNumber', sa.phone_number,
+    'postalCode', sa.postal_code
+	) \`shippingAddress\`
+  FROM orders o
+  INNER JOIN users u ON o.user_id = u.id
+  INNER JOIN shipping_address sa ON u.id = sa.user_id
+  WHERE o.id = ?
+  LIMIT 1;`
+
+  const [order] = await queryRunner.query(rawQuery, [orderId])
+  return order
+}
 
 const postOrders = async (user, shippingAddress, cart, orderNumber) => {
   const queryRunner = database.createQueryRunner()
@@ -85,34 +108,48 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
     VALUES(?, ?, ?, ?, ?, ?);`
 
     const orderStatusId = 1
-    const { affectedRows, insertId } = await queryRunner
+    const { affectedRows, insertId: orderId } = await queryRunner
       .query(rawQuery, [orderNumber, user.id, user.email, 'point', paymentAmount, orderStatusId])
-    postOrderItem(queryRunner, insertId, cart, orderStatusId)
+
+    if (!affectedRows) throw new Error('Not Inserted')
+
+    await postOrderItem(queryRunner, orderId, cart, orderStatusId)
+    await deleteCartByUserId(queryRunner, user.id)
+    await calcUserPoint(queryRunner, user, paymentAmount)
+    const order = await getOrder(queryRunner, orderId)
     await queryRunner.commitTransaction()
+
+    return order
   } catch (err) {
     console.error(err)
     await queryRunner.rollbackTransaction()
+    return false
   } finally {
     await queryRunner.release()
   }
-
-  return
 }
 
 const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
-  cart.forEach(c => {
-    try {
-      const rawQuery = `
+  cart.forEach(async c => {
+    const rawQuery = `
       INSERT INTO order_items
       (quantity, price, order_id, product_id, order_status_id)
       VALUES
       (?, ?, ?, ?, ?);`
-      queryRunner.query(rawQuery, [c.quantity, c.productPrice, orderId, c.productId, orderStatusId])
-    } catch (err) {
-      console.error(err)
-      throw err
-    }
+    const { affectedRows } = await queryRunner
+      .query(rawQuery, [c.quantity, c.productPrice, orderId, c.productId, orderStatusId])
+    if (!affectedRows) throw new Error('Not Inserted.')
   })
+
+  return
+}
+
+const deleteCartByUserId = async (queryRunner, userId) => {
+  const rawQuery = `
+  DELETE FROM cart WHERE user_id = ?;`
+
+  const { affectedRows } = await queryRunner.query(rawQuery, userId)
+  if (!affectedRows) throw new Error('Not deleted.')
 
   return
 }
@@ -126,49 +163,20 @@ const getPaymentAmount = (cart) => {
   return paymentAmount
 }
 
-// try {
+const calcUserPoint = async (queryRunner, user, paymentAmount) => {
+  const rawQuery = `
+  UPDATE users SET point = point - ? WHERE id = ?;`
 
-//   const orderItemsColumns = [
-//     'quantity',
-//     'price',
-//     'order_id',
-//     'product_id',
-//     'order_status_id']
+  const { affectedRows } = await queryRunner.query(rawQuery, [paymentAmount, user.id])
+  if (!affectedRows) throw new Error('NOT_UPDATED_USER_POINT')
 
-//   table = 'order_items'
-//   columns = orderItemsColumns.join(',')
-//   queries = Array(orderItemsColumns.length).fill('?').join(',')
-//   const rawQuery = `
-//       INSERT INTO
-//       ${table} ${columns}
-//       VALUES
-//       (${queries});`
-
-//   console.log(rawQuery)
-
-
-// try {
-//   // execute some operations on this transaction:
-//   // await queryRunner.manager.save(user2)
-//   // await queryRunner.manager.save(photos)
-
-//   // commit transaction now:
-//   await queryRunner.commitTransaction()
-
-// 1 postOrderItem
-
-// 2 postOrder
-
-// 3 deleteCart
-
-const deleteCart = async (user, shippingAddress, cart) => {
   return
 }
 
 module.exports = {
   getOrderFromCart,
+  getOrder,
   postOrders,
   getProductsByProductIds,
-  getOptionsByProductIds,
-  insertCart
+  getOptionsByProductIds
 }
