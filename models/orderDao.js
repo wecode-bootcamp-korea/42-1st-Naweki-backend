@@ -71,11 +71,24 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
   await queryRunner.connect()
   await queryRunner.startTransaction()
 
-  console.log(orderNumber)
+  const paymentAmount = getPaymentAmount(cart)
 
   try {
-    // const { affectedRows, insertId } = await queryRunner.query(rawQuery, values)
-    //  await queryRunner.commitTransaction()
+    const rawQuery = `
+    INSERT INTO orders
+      (order_number,
+        user_id,
+        email,
+        payment_method,
+        payment_amount,
+        order_status_id)
+    VALUES(?, ?, ?, ?, ?, ?);`
+
+    const orderStatusId = 1
+    const { affectedRows, insertId } = await queryRunner
+      .query(rawQuery, [orderNumber, user.id, user.email, 'point', paymentAmount, orderStatusId])
+    postOrderItem(queryRunner, insertId, cart, orderStatusId)
+    await queryRunner.commitTransaction()
   } catch (err) {
     console.error(err)
     await queryRunner.rollbackTransaction()
@@ -84,6 +97,33 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
   }
 
   return
+}
+
+const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
+  cart.forEach(c => {
+    try {
+      const rawQuery = `
+      INSERT INTO order_items
+      (quantity, price, order_id, product_id, order_status_id)
+      VALUES
+      (?, ?, ?, ?, ?);`
+      queryRunner.query(rawQuery, [c.quantity, c.productPrice, orderId, c.productId, orderStatusId])
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  })
+
+  return
+}
+
+const getPaymentAmount = (cart) => {
+  let paymentAmount = 0
+  cart.forEach(c => {
+    paymentAmount += c.productPrice
+  })
+
+  return paymentAmount
 }
 
 // try {
@@ -120,11 +160,6 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
 // 2 postOrder
 
 // 3 deleteCart
-
-
-const postOrderItem = async (user, shippingAddress, cart) => {
-  return
-}
 
 const deleteCart = async (user, shippingAddress, cart) => {
   return
