@@ -3,11 +3,19 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const { category, subCategory, gender, limit, offset, sort } = filter
+  const {
+    category,
+    subCategory,
+    gender,
+    color,
+    limit,
+    offset,
+    sort } = filter
 
   category ? where.push(`c.name = '${category}'`) : ''
   subCategory ? where.push(`sc.name = '${subCategory}'`) : ''
-  gender ? where.push(`g.type = '${gender}'`) : ''
+  gender ? where.push(`p.gender = '${gender}'`) : ''
+  color ? where.push(`p.color = '${color}'`) : ''
 
   where = where.join(' AND ')
 
@@ -24,6 +32,7 @@ const getProducts = async (filter) => {
     p.id,
     p.name,
     p.price,
+    p.discount_rate discountRate,
     p.created_at createdAt,
     p.thumbnail_image thumbnailImage,
     p.gender,

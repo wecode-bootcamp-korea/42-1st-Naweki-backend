@@ -5,6 +5,7 @@
 db/schema.sql
 dbdiagram.dbml
 .vscode/
+images/
 
 ### dotenv ###
 .env
