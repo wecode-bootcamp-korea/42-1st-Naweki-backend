@@ -7,7 +7,7 @@ class User {
     this.password = userInfo?.password
     this.shoppingPreference = userInfo?.shoppingPreference
     this.birthday = userInfo?.birthday
-    this.point = null
+    this.point = userInfo?.point
   }
 
   keyCheck() {

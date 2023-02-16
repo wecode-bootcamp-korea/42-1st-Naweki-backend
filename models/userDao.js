@@ -55,8 +55,8 @@ const getUserById = async (id) => {
   const rawQuery = `
     SELECT
       id,
-      first_name,
-      last_name,
+      first_name firstName,
+      last_name lastName,
       email,
       password,
       phone_number,
