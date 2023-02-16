@@ -6,6 +6,6 @@ const orderRouter = require('./orderRouter')
 
 router.use('/users', userRouter)
 router.use('/products', productRouter)
-router.use('/order', orderRouter)
+router.use('/checkout', orderRouter)
 
 module.exports = router
