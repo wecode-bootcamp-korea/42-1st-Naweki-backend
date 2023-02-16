@@ -189,7 +189,7 @@ const deleteCartByUserId = async (queryRunner, userId) => {
 const getPaymentAmount = (cart) => {
   let paymentAmount = 0
   cart.forEach(cart => {
-    paymentAmount += cart.productPrice
+    paymentAmount += cart.productPrice * cart.quantity
   })
 
   return paymentAmount
