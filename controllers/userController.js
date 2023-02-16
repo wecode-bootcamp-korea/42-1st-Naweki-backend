@@ -1,5 +1,6 @@
 const userService = require('../services/userService')
 const User = require('../classes/user')
+const Address = require('../classes/address')
 const { catchAsync } = require('../utils/error/handler')
 const { checkEmail, checkPassword } = require('../utils/validation')
 
@@ -53,8 +54,25 @@ const login = catchAsync(async (req, res) => {
   return res.status(201).json({ JWT: token })
 })
 
+const getAddress = catchAsync(async (req, res) => {
+  const result = await userService.getAddressByUserId(req.user.id)
+  if (!result) new Error('failedToGetAddressErr')
+  return res.status(200).json({ data: result })
+})
+
+const postAddress = catchAsync(async (req, res) => {
+  const address = new Address(req.body)
+
+  const result = await userService.postAddress(address)
+  if (!result) new Error('failedToPostAddressErr')
+
+  return res.status(201).json({ message: 'post Address' })
+})
+
 module.exports = {
   lookUp,
   signUp,
   login,
+  postAddress,
+  getAddress
 }
