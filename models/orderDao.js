@@ -196,11 +196,17 @@ const getPaymentAmount = (cart) => {
 }
 
 const calcUserPoint = async (queryRunner, user, paymentAmount) => {
+  if (Number(user.point) < paymentAmount) {
+    throw new Error('pointLessErr')
+  }
+
   const rawQuery = `
   UPDATE users SET point = point - ? WHERE id = ?;`
 
   const { affectedRows } = await queryRunner.query(rawQuery, [paymentAmount, user.id])
-  if (affectedRows != 1) throw new Error('NOT_UPDATED_USER_POINT')
+  if (affectedRows != 1) {
+    throw new Error('NOT_UPDATED_USER_POINT')
+  }
 
   return
 }
