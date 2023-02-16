@@ -91,11 +91,11 @@ const checkout = async (user, cart, orderNumber) => {
   queryRunner.startTransaction()
   try {
     const paymentAmount = getPaymentAmount(cart)
-    await checkStockFromProductsOptions(queryRunner, cart) // done
-    orderId = await postOrders(queryRunner, user, orderNumber, paymentAmount) // done
-    await postOrderItem(queryRunner, orderId, cart, ORDER_STATUS.COMPLETE) // done
-    await calcUserPoint(queryRunner, user, paymentAmount) // done
-    await calcProductStock(queryRunner, cart) // done
+    await checkStockFromProductsOptions(queryRunner, cart)
+    orderId = await postOrders(queryRunner, user, orderNumber, paymentAmount)
+    await postOrderItem(queryRunner, orderId, cart, ORDER_STATUS.COMPLETE)
+    await calcUserPoint(queryRunner, user, paymentAmount)
+    await calcProductStock(queryRunner, cart)
     await deleteCartByUserId(queryRunner, user.id)
     await queryRunner.commitTransaction()
     return orderId
@@ -124,10 +124,10 @@ const checkStockFromProductsOptions = async (queryRunner, cart) => {
   ON p.id = po.product_id
   WHERE c.product_id = ?;`
 
-  for (let i = 0; i < cart.length; i++) {
-    const [{ stock }] = await queryRunner.query(rawQuery, [cart[i].productId])
+  for (let index = 0; index < cart.length; index++) {
+    const [{ stock }] = await queryRunner.query(rawQuery, [cart[index].productId])
     if (stock === 0) {
-      throw new Error(`NO_STOCK_FOR_PRODUCT_ID_${cart[i].productId}`)
+      throw new Error(`NO_STOCK_FOR_PRODUCT_ID_${cart[index].productId}`)
     }
   }
 
@@ -157,7 +157,7 @@ const postOrders = async (queryRunner, user, orderNumber, paymentAmount) => {
 }
 
 const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
-  for (let i = 0; i < cart.length; i++) {
+  for (let index = 0; index < cart.length; index++) {
     const rawQuery = `
       INSERT INTO order_items
       (quantity, price, order_id, product_id, order_status_id)
@@ -165,10 +165,10 @@ const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
       (?, ?, ?, ?, ?);`
     const { affectedRows } = await queryRunner
       .query(rawQuery, [
-        cart[i].quantity,
-        cart[i].productPrice,
+        cart[index].quantity,
+        cart[index].productPrice,
         orderId,
-        cart[i].productId,
+        cart[index].productId,
         orderStatusId])
     if (affectedRows != 1) throw new Error('NOT_INSERTED_ORDER_ITEM')
   }
