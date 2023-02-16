@@ -84,12 +84,13 @@ const getProductDetails = async (productId) => {
 
     const productStockQuery = `
     SELECT
+      b.id,
       b.value as size,
       SUM(a.quantity) as count
     FROM products_options a
     JOIN sizes b ON a.size_id = b.id
     WHERE a.product_id = ?
-    GROUP BY b.value;
+    GROUP BY b.id;
     `
 
     const stock = await database.query(productStockQuery, [productId])
@@ -123,5 +124,5 @@ const getProductDetails = async (productId) => {
 
 module.exports = {
   getProducts,
-  getProductDetails
+  getProductDetails,
 }

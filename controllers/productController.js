@@ -1,5 +1,6 @@
 const { catchAsync } = require('../utils/error/handler')
 const productService = require('../services/productService')
+const { DEFAULT_PAGE, DEFAULT_LIMIT } = require('../utils/constants')
 
 const getProducts = catchAsync(async (req, res) => {
   const { category, subCategory, color, gender, sort } = req.query
@@ -20,11 +21,11 @@ const getProducts = catchAsync(async (req, res) => {
 })
 
 const getPageAndLimit = (req) => {
-  let { page, limit = 3 } = req.query
+  let { page, limit } = req.query
   page = parseInt(page)
   limit = parseInt(limit)
-  if (!page) page = 1
-  if (!limit) limit = 3
+  if (!page) page = DEFAULT_PAGE
+  if (!limit) limit = DEFAULT_LIMIT
 
   const offset = (page - 1) * limit
 
