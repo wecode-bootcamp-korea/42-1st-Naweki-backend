@@ -81,6 +81,11 @@ const messages = {
   orderFailedErr: {
     statusCode: 400,
     message: 'FAILED_TO_ORDER'
+  },
+
+  pointLessErr: {
+    statusCode: 400,
+    message: 'POINT_LESS_THAN_PAYMENT_AMOUNT'
   }
 
   // orderErrMsg End
