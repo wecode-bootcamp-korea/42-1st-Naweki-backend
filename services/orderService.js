@@ -36,13 +36,13 @@ const getOrder = async (user, orderId) => {
   return await orderDao.getOrder(user, orderId)
 }
 
-const postOrders = async (user, shippingAddress, cart) => {
+const checkout = async (userId, cart) => {
   const orderNumber = uuidv4()
-  return await orderDao.postOrders(user, shippingAddress, cart, orderNumber)
+  return await orderDao.checkout(userId, cart, orderNumber)
 }
 
 module.exports = {
   getOrderFromCart,
   getOrder,
-  postOrders,
+  checkout,
 }

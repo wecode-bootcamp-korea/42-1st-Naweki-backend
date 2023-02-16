@@ -8,25 +8,25 @@ const getOrderFromCart = catchAsync(async (req, res) => {
   return res.status(200).json({ data: order })
 })
 
-const postOrders = catchAsync(async (req, res) => {
+const checkout = catchAsync(async (req, res) => {
   const { cart, shippingAddress } = req.body
   const { id: userId } = req.user
   if (!cart || !shippingAddress) throw new Error('keyErr')
   if (isEmpty(shippingAddress)) throw new Error('emptyAddressErr')
   if (isEmpty(cart)) throw new Error('emptyCartErr')
 
-  const orderId = await orderService.postOrders(userId, shippingAddress, cart)
+  const orderId = await orderService.checkout(userId, cart)
 
   if (!orderId) {
     return res.status(400).json({ data: 'orderFailedErr' })
   }
 
-  const order = await orderService.getOrder(userId, orderId)
+  const order = await orderService.getOrder(req.user, orderId)
 
   return res.status(200).json({ data: order })
 })
 
 module.exports = {
   getOrderFromCart,
-  postOrders,
+  checkout,
 }

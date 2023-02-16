@@ -1,5 +1,6 @@
 const database = require('./index')
 const { OrderStatusEnum } = require('../utils/enum')
+const { PAYMENT_METHOD } = require('../utils/paymentsMethod')
 
 const getOrderFromCart = async (userId) => {
   const rawQuery = `
@@ -82,13 +83,27 @@ const getOrder = async (queryRunner, orderId) => {
   return order
 }
 
-const postOrders = async (user, shippingAddress, cart, orderNumber) => {
+const checkout = async (user, cart, orderNumber) => {
+  console.log('checkout start')
   const queryRunner = database.createQueryRunner()
-  await queryRunner.connect()
-  await queryRunner.startTransaction()
+  queryRunner.connect()
+  queryRunner.startTransaction()
+  try {
+    const paymentAmount = getPaymentAmount(cart)
+    await postOrders(queryRunner, user, orderNumber, paymentAmount)
+    await queryRunner.commitTransaction()
+  } catch (err) {
+    console.error(err)
+    await queryRunner.rollbackTransaction()
+  } finally {
+    await queryRunner.release()
+  }
 
-  const paymentAmount = getPaymentAmount(cart)
+  console.log('checkout done')
+}
 
+const postOrders = async (queryRunner, user, orderNumber, paymentAmount) => {
+  console.log('postOrders')
   try {
     const rawQuery = `
     INSERT INTO orders
@@ -100,31 +115,56 @@ const postOrders = async (user, shippingAddress, cart, orderNumber) => {
         order_status_id)
     VALUES(?, ?, ?, ?, ?, ?);`
 
-    const { affectedRows, insertId: orderId } = await queryRunner
-      .query(rawQuery,
-        [orderNumber,
-          user.id,
-          user.email,
-          'point',
-          paymentAmount,
-          OrderStatusEnum.COMPLETE])
+    const { insertId: orderId } = queryRunner.query(rawQuery, [orderNumber,
+      user.id,
+      user.email,
+      PAYMENT_METHOD,
+      paymentAmount,
+      OrderStatusEnum.COMPLETE])
 
-    if (!affectedRows) throw new Error('Not Inserted')
-
-    await postOrderItem(queryRunner, orderId, cart, orderStatusId)
-    await deleteCartByUserId(queryRunner, user.id)
-    await calcUserPoint(queryRunner, user, paymentAmount)
-    const order = await getOrder(queryRunner, orderId)
-    await queryRunner.commitTransaction()
-
-    return order
+    return orderId
   } catch (err) {
     console.error(err)
-    await queryRunner.rollbackTransaction()
-    return false
   } finally {
-    await queryRunner.release()
+
   }
+
+  // try {
+  //   const rawQuery = `
+  //   INSERT INTO orders
+  //     (order_number,
+  //       user_id,
+  //       email,
+  //       payment_method,
+  //       payment_amount,
+  //       order_status_id)
+  //   VALUES(?, ?, ?, ?, ?, ?);`
+
+  //   const { affectedRows, insertId: orderId } = await queryRunner
+  //     .query(rawQuery,
+  //       [orderNumber,
+  //         user.id,
+  //         user.email,
+  //         'point',
+  //         paymentAmount,
+  //         OrderStatusEnum.COMPLETE])
+
+  //   if (!affectedRows) throw new Error('Not Inserted')
+
+  //   await postOrderItem(queryRunner, orderId, cart, orderStatusId)
+  //   await deleteCartByUserId(queryRunner, user.id)
+  //   await calcUserPoint(queryRunner, user, paymentAmount)
+  //   const order = await getOrder(queryRunner, orderId)
+  //   await queryRunner.commitTransaction()
+
+  //   return order
+  // } catch (err) {
+  //   console.error(err)
+  //   await queryRunner.rollbackTransaction()
+  //   return false
+  // } finally {
+  //   await queryRunner.release()
+  // }
 }
 
 const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
@@ -172,9 +212,9 @@ const calcUserPoint = async (queryRunner, user, paymentAmount) => {
 }
 
 module.exports = {
+  checkout,
   getOrderFromCart,
   getOrder,
-  postOrders,
   getProductsByProductIds,
   getOptionsByProductIds
 }
