@@ -5,6 +5,7 @@ const { isEmpty } = require('../utils/utils')
 const getOrderFromCart = catchAsync(async (req, res) => {
   const { id: userId } = req.user
   const order = await orderService.getOrderFromCart(userId)
+
   return res.status(200).json({ data: order })
 })
 
