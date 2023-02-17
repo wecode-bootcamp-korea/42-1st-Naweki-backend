@@ -3,11 +3,12 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const { category, subCategory, gender, limit, offset, sort } = filter
+  const { category, subCategory, gender, color, limit, offset, sort } = filter
 
   category ? where.push(`c.name = '${category}'`) : ''
   subCategory ? where.push(`sc.name = '${subCategory}'`) : ''
-  gender ? where.push(`g.type = '${gender}'`) : ''
+  gender ? where.push(`p.gender = '${gender}'`) : ''
+  color ? where.push(`p.color = '${color}'`) : ''
 
   where = where.join(' AND ')
 
@@ -24,6 +25,7 @@ const getProducts = async (filter) => {
     p.id,
     p.name,
     p.price,
+    p.discount_rate discountRate,
     p.created_at createdAt,
     p.thumbnail_image thumbnailImage,
     p.gender,
@@ -61,8 +63,7 @@ const getProductDetails = async (productId) => {
       p.style_code as styleCode,
       p.discount_rate as discountRate,
       p.created_at as createdAt,
-      p.updated_at as updatedAt,
-      GROUP_CONCAT(pi.url) as imageUrl
+      p.updated_at as updatedAt
     FROM products p
     JOIN sub_categories sc ON p.sub_category_id = sc.id
     JOIN categories mc ON sc.category_id = mc.id
@@ -72,6 +73,16 @@ const getProductDetails = async (productId) => {
     `
 
     const [product] = await database.query(productQuery, [productId])
+
+    const productImages = `
+    SELECT
+      id,
+      url
+    FROM products_images
+    WHERE product_id = ?;
+    `
+    const images = await database.query(productImages, [productId])
+    product.imageUrl = images
 
     const productStockQuery = `
     SELECT
@@ -96,7 +107,7 @@ const getProductDetails = async (productId) => {
         'description', r.description,
         'rating', r.rating,
         'createdAt', r.created_at,
-        'name', CONCAT(u.first_name, ' ', u.last_name)
+        'name', CONCAT(u.last_name, u.first_name)
       )) as reviews
     FROM reviews r
     JOIN order_items ot ON r.order_item_id = ot.id
