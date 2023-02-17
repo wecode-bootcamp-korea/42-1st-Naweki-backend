@@ -10,9 +10,4 @@ router.use('/products', productRouter)
 router.use('/order', orderRouter)
 router.use('/cart', cartRouter)
 
-router.use('/users', userRouter)
-router.use('/products', productRouter)
-router.use('/cart', cartRouter)
-router.use('/checkout', orderRouter)
-
 module.exports = router

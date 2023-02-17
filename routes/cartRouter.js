@@ -6,8 +6,6 @@ const router = express.Router()
 
 router.get('/', validateToken, cartController.getCart)
 router.post('/', validateToken, cartController.addCartItem)
-router.delete('/', validateToken, cartController.deleteCartItem)
-// router.patch('/', validateToken, cartController.updateCartItems)
-// router.post('/checkout', validateToken, cartController.checkoutItems)
+router.delete('/:cartId?', validateToken, cartController.deleteCartItem)
 
 module.exports = router

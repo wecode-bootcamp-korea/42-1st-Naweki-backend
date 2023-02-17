@@ -1,19 +1,17 @@
 const cartDao = require('../models/cartDao')
 const jwt = require('jsonwebtoken')
-const secretKey = process.env.SECRET_KEY
 
-const getCart = async (token) => {
+const getCart = async (id) => {
   try {
-    const decoded = jwt.verify(token, secretKey)
-    const userId = decoded.id
-
-    return await cartDao.getCart(userId)
-  } catch (error) {}
+    return await cartDao.getCart(id)
+  } catch (error) {
+    throw error
+  }
 }
 
-const addCartItem = async (product) => {
+const addCartItem = async (id, productId, sizeId) => {
   try {
-    return await cartDao.addCartItem(product)
+    return await cartDao.addCartItem(id, productId, sizeId)
   } catch (err) {
     throw err
   }
@@ -21,6 +19,10 @@ const addCartItem = async (product) => {
 
 const deleteCartItem = async (cartId) => {
   try {
+    const lookup = await cartDao.lookup(cartId)
+    if (lookup.result == 0) {
+      throw new Error('noCartItemErr')
+    }
     return await cartDao.deleteCartItem(cartId)
   } catch (err) {
     throw err
