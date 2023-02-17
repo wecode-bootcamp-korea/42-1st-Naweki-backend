@@ -7,7 +7,7 @@ const { globalErrorHandler } = require('./utils/error/handler')
 
 const app = express()
 
-app.use(express.static('images'))
+app.use(express.static('public'))
 app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
