@@ -9,7 +9,7 @@ const validateToken = catchAsync(async (req, res, next) => {
     throw new Error('noAuthorizationErr')
   }
 
-  await jwt.verify(
+  jwt.verify(
     authorization,
     process.env.SECRET_KEY,
     async (err, decoded) => {
