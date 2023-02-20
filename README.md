@@ -63,8 +63,6 @@
 | Front-end | Back-end |
 | :--: | :--: |
 [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-frontend) | [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-backend)
-- [Frontend Github Repo](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-frontend)
-- [Backend Github Repo](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-backend)
 
 
 # Naweki ERD
