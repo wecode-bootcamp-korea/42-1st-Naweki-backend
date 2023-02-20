@@ -66,7 +66,7 @@
 
 
 # Naweki ERD
-![Naweki ERD](./images/ERD.png)
+![ERD](https://user-images.githubusercontent.com/122243107/219989773-306c6d8e-63a6-4172-9c99-cda2e0e1f971.png)
 
 Naweki DB Schema 구조
 
