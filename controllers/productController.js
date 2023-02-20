@@ -41,5 +41,5 @@ const getProductDetails = catchAsync(async (req, res) => {
 
 module.exports = {
   getProducts,
-  getProductDetails
+  getProductDetails,
 }

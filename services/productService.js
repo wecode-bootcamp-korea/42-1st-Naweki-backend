@@ -15,7 +15,7 @@ const getProducts = async (filter) => {
     color: product.color,
     gender: product.gender,
     isNew: isNewProduct(product.createdAt),
-    updatedAt: product.updatedAt
+    updatedAt: product.updatedAt,
   }))
 
   return products
