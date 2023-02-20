@@ -1,4 +1,6 @@
-![Naweki](./logo/logo.png)
+![image](https://user-images.githubusercontent.com/122417190/219989077-0cfcdff0-b28b-4f87-b36a-adcd0dfea1c8.png)
+
+
 # 스포츠 용품 판매 사이트 Naweki
 
 # Naweki Goal
@@ -61,12 +63,10 @@
 | Front-end | Back-end |
 | :--: | :--: |
 [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-frontend) | [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-backend)
-- [Frontend Github Repo](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-frontend)
-- [Backend Github Repo](https://github.com/wecode-bootcamp-korea/42-1st-Naweki-backend)
 
 
 # Naweki ERD
-![Naweki ERD](./images/ERD.png)
+![ERD](https://user-images.githubusercontent.com/122243107/219989773-306c6d8e-63a6-4172-9c99-cda2e0e1f971.png)
 
 Naweki DB Schema 구조
 
