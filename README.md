@@ -104,7 +104,7 @@
         // 끊어주기 위하여 queryRUnner 에 대해서 release 실행.
         queryRunner.relase()
       }
-    ```
+      ```
     <br>
 
     2. 재고 수량 파악.
