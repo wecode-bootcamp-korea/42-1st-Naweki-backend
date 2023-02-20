@@ -76,15 +76,15 @@
     두 시간의 차이가 하루보다 적다면 신상품으로 분류되도록 구현. 하루보다 적다면 Products 의 isNew 키값에 true, 그렇지 않다면 false 값이 객체에 저장. <br><br>
     ```javascript
     const isNewProduct = (productCreatedTime) => {
-    const currentTime = getCurrentTime()
-    const productCreatedTimeInMs = new Date(productCreatedTime).getTime()
+      const currentTime = getCurrentTime()
+      const productCreatedTimeInMs = new Date(productCreatedTime).getTime()
 
-    return currentTime - productCreatedTimeInMs < ONE_HOUR_IN_MILLISECONDS
+      return currentTime - productCreatedTimeInMs < ONE_HOUR_IN_MILLISECONDS
+    }
     ```
-}
 
   * 주문하기 기능 구현
-    1. Transaction 시작. <br><br>
+    1. TypeORM 의 DataSource 의 instance method인 createQueryRunner 를 호출하여 queryRunner instance 를 생성하고 startTransaction() method로 Transaction 시작. <br><br>
     ```javascript
       const queryRunner = database.createQueryRunner()
       queryRunner.connect()
@@ -104,7 +104,7 @@
         // 끊어주기 위하여 queryRUnner 에 대해서 release 실행.
         queryRunner.relase()
       }
-    ```
+      ```
     <br>
 
     2. 재고 수량 파악.
