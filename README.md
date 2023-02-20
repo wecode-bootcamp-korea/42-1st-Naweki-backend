@@ -1,4 +1,6 @@
-![Naweki](./logo/logo.png)
+![image](https://user-images.githubusercontent.com/122417190/219989077-0cfcdff0-b28b-4f87-b36a-adcd0dfea1c8.png)
+
+
 # 스포츠 용품 판매 사이트 Naweki
 
 # Naweki Goal
