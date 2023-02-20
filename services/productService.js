@@ -8,9 +8,12 @@ const getProducts = async (filter) => {
     id: product.id,
     name: product.name,
     price: Math.ceil(product.price),
+    discountRate: product.discountRate,
     thumbnailImage: product.thumbnailImage,
     subCategory: product.subCategory,
     mainCategory: product.mainCategory,
+    color: product.color,
+    gender: product.gender,
     isNew: isNewProduct(product.createdAt),
     updatedAt: product.updatedAt
   }))

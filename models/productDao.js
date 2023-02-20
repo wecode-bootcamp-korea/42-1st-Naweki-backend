@@ -3,7 +3,14 @@ const database = require('./index')
 const getProducts = async (filter) => {
   let where = []
 
-  const { category, subCategory, gender, color, limit, offset, sort } = filter
+  const {
+    category,
+    subCategory,
+    gender,
+    color,
+    limit,
+    offset,
+    sort } = filter
 
   category ? where.push(`c.name = '${category}'`) : ''
   subCategory ? where.push(`sc.name = '${subCategory}'`) : ''
