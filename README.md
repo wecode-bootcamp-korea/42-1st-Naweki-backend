@@ -4,12 +4,6 @@
 # 스포츠 용품 판매 사이트 Naweki
 
 # Naweki Goal
-* 로그인 기능 구현
-  * 로그인 하기 전 Email 체크하여 회원 유무 판단.
-  * DB 에 존재하는 유저이면 회원가입 페이지로 이동.
-  * DB 에 존재하지 않는 유저이면 로그인 페이지로 이동.
-  * bcrypt library 사용하여 유저가 입력한 Password 와 DB 에 있는 암호화 되어있는 Password 비교.
-  * 비밀번호 일치하면 response body 로 JWT Token 발급.
 
 <br>
 
@@ -19,8 +13,8 @@
 
   * 로그인 기능 구현
     * 필수 입력정보에서 Email, Password 정규 표현식으로 유효성 검사.
-    * 유효성 검사 통과하면 Mysql Users 테이블에 유저정보 추가.
-    * Node.js bcrypt library 사용하여 유저 비밀번호 암호화.
+    * bcrypt library 사용하여 유저가 입력한 Password 와 DB 에 있는 암호화 되어있는 Password 비교.
+    * 비밀번호 일치하면 response body 로 JWT Token 발급.
 
   * 제품 상세 페이지 기능 구현
 
@@ -35,6 +29,9 @@
 * 한재님
 
   * Lookup API 기능 구현
+    * 로그인 하기 전 Email 체크하여 회원 유무 판단.
+    * DB 에 존재하는 유저이면 회원가입 페이지로 이동.
+    * DB 에 존재하지 않는 유저이면 로그인 페이지로 이동.
     * 유저 email 정보를 받아 DB 에 있는 유저 이메일인지 검증 한 후 존재하지 않다면
      EMAIL_IS_VERIFIED 라고 응답 메세지를 주도록 구현
 
