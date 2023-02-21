@@ -1,6 +1,6 @@
 const database = require('./index')
 
-const lookup = async (cartId) => {
+const lookupByCartId = async (cartId) => {
   try {
     const rawQuery = `
     SELECT EXISTS
@@ -17,7 +17,23 @@ const lookup = async (cartId) => {
   }
 }
 
-const getCart = async (id) => {
+const lookupBySizeId = async (userId, productId, sizeId) => {
+  try {
+    const rawQuery = `
+    SELECT
+      id,
+      quantity
+    FROM cart
+    WHERE user_id = ? AND product_id = ? AND size_id = ?;
+    `
+    const [result] = await database.query(rawQuery, [userId, productId, sizeId])
+    return result
+  } catch (err) {
+    throw err
+  }
+}
+
+const getCart = async (userId) => {
   try {
     const rawQuery = `
     SELECT
@@ -45,8 +61,8 @@ const getCart = async (id) => {
     LEFT JOIN products_options po ON po.product_id = p.id AND po.size_id = s.id
     WHERE c.user_id = ?;
     `
-
-    const items = await database.query(rawQuery, [id])
+    
+    const items = await database.query(rawQuery, userId)
 
     for (let i = 0; i < items.length; i++) {
       items[i].price = parseFloat(items[i].price)
@@ -59,7 +75,7 @@ const getCart = async (id) => {
   }
 }
 
-const addCartItem = async (id, productId, sizeId) => {
+const addCartItem = async (userId, productId, sizeId) => {
   try {
     const rawQuery = `
     INSERT INTO
@@ -69,28 +85,13 @@ const addCartItem = async (id, productId, sizeId) => {
     `
 
     const { affectedRows } = await database.query(rawQuery, [
-      id,
+      userId,
       productId,
       sizeId,
     ])
 
     if (affectedRows == 0) {
-      throw new Error('CART_ITEM_ADD_FAILED')
-    }
-
-    return
-  } catch (err) {
-    throw new Error('failedToAddItemErr')
-  }
-}
-
-const deleteCartItem = async (cartId) => {
-  try {
-    const rawQuery = `DELETE FROM cart WHERE id = ?;`
-
-    const { affectedRows } = await database.query(rawQuery, cartId)
-    if (affectedRows == 0) {
-      throw new Error('CART_ITEM_DELETE_FAILED')
+      throw new Error('failedToAddItemErr')
     }
 
     return
@@ -99,9 +100,70 @@ const deleteCartItem = async (cartId) => {
   }
 }
 
+const deleteCartItem = async (cartId) => {
+  try {
+    const rawQuery = `
+    DELETE FROM
+      cart
+    WHERE id = ?;`
+
+    const { affectedRows } = await database.query(rawQuery, cartId)
+
+    if (affectedRows == 0) {
+      throw new Error('failedToDeleteItemErr')
+    }
+
+    return
+  } catch (err) {
+    throw err
+  }
+}
+
+const updateCartItem = async (cartId, sizeId, quantity) => {
+  try {
+    console.log(cartId, sizeId, quantity)
+
+    if (sizeId) {
+      const sizeRawQuery = `
+      UPDATE cart
+      SET size_id = ?
+      WHERE id = ?
+      `
+      const { affectedRows } = await database.query(sizeRawQuery, [
+        sizeId,
+        cartId,
+      ])
+      if (affectedRows == 0) {
+        throw new Error('failedToUpdateItemErr')
+      }
+    }
+
+    if (quantity) {
+      const quantityRawQuery = `
+          UPDATE cart
+          SET quantity = ?
+          WHERE id = ?;
+          `
+      const { affectedRows } = await database.query(quantityRawQuery, [
+        quantity,
+        cartId,
+      ])
+
+      if (affectedRows == 0) {
+        throw new Error('failedToUpdateItemErr')
+      }
+    }
+    return
+  } catch (err) {
+    throw err
+  }
+}
+
 module.exports = {
-  lookup,
+  lookupByCartId,
+  lookupBySizeId,
   getCart,
   addCartItem,
   deleteCartItem,
+  updateCartItem,
 }

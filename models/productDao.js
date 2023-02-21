@@ -1,5 +1,21 @@
 const database = require('./index')
 
+const lookupByProductId = async (productId) => {
+  try {
+    const rawQuery = `
+    SELECT EXISTS
+    (SELECT
+      id
+    FROM products
+    WHERE id = ?) as result;
+    `
+    const [result] = await database.query(rawQuery, productId)
+    return result
+  } catch (err) {
+    throw new Error('invalidInputErr')
+  }
+}
+
 const getProducts = async (filter) => {
   let where = []
 
@@ -125,6 +141,7 @@ const getProductDetails = async (productId) => {
 }
 
 module.exports = {
+  lookupByProductId,
   getProducts,
   getProductDetails,
 }
