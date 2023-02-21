@@ -25,7 +25,7 @@ const addCartItem = async (userId, productId, sizeId) => {
 
 const deleteCartItem = async (userId, cartId) => {
   try {
-    const lookup = await cartDao.lookupByCartId(userId, cartId)
+    const lookup = await cartDao.lookupByCartId(cartId)
     if (lookup.result == 0) {
       throw new Error('noCartItemErr')
     }

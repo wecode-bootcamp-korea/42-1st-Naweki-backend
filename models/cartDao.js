@@ -9,8 +9,7 @@ const lookupByCartId = async (cartId) => {
     FROM cart
     WHERE id = ?) as result;
     `
-
-    const [result] = await database.query(rawQuery, [cartId])
+    const [result] = await database.query(rawQuery, cartId)
     return result
   } catch (err) {
     throw err
@@ -61,7 +60,7 @@ const getCart = async (userId) => {
     LEFT JOIN products_options po ON po.product_id = p.id AND po.size_id = s.id
     WHERE c.user_id = ?;
     `
-    
+
     const items = await database.query(rawQuery, userId)
 
     for (let i = 0; i < items.length; i++) {
@@ -121,8 +120,6 @@ const deleteCartItem = async (cartId) => {
 
 const updateCartItem = async (cartId, sizeId, quantity) => {
   try {
-    console.log(cartId, sizeId, quantity)
-
     if (sizeId) {
       const sizeRawQuery = `
       UPDATE cart
