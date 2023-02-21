@@ -15,7 +15,7 @@ const getProducts = async (filter) => {
     color: product.color,
     gender: product.gender,
     isNew: isNewProduct(product.createdAt),
-    updatedAt: product.updatedAt
+    updatedAt: product.updatedAt,
   }))
 
   return products
@@ -29,8 +29,12 @@ const isNewProduct = (productCreatedTime) => {
 }
 
 const getProductDetails = async (productId) => {
-  const product = await productDao.getProductDetails(productId)
+  const lookup = await productDao.lookupByProductId(productId)
+  if (lookup.result == 0) {
+    throw new Error('noProductIdErr')
+  }
 
+  const product = await productDao.getProductDetails(productId)
   return product
 }
 

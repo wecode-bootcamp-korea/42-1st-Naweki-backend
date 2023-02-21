@@ -34,12 +34,11 @@ const getPageAndLimit = (req) => {
 
 const getProductDetails = catchAsync(async (req, res) => {
   const { productId } = req.params
-
   const details = await productService.getProductDetails(productId)
   return res.status(200).json({ product: details })
 })
 
 module.exports = {
   getProducts,
-  getProductDetails
+  getProductDetails,
 }
