@@ -101,7 +101,9 @@ const checkout = async (user, cart, orderNumber) => {
     return orderId
   } catch (err) {
     await queryRunner.rollbackTransaction()
-    err = message[err.message]?.message ? err : new Error('CHECKOUT_FAILED_ERROR')
+    err = message[err.message]?.message
+      ? err
+      : new Error('CHECKOUT_FAILED_ERROR')
     err.statusCode = 400
     throw err
   } finally {
@@ -125,7 +127,9 @@ const checkStockFromProductsOptions = async (queryRunner, cart) => {
   WHERE c.product_id = ?;`
 
   for (let index = 0; index < cart.length; index++) {
-    const [{ stock }] = await queryRunner.query(rawQuery, [cart[index].productId])
+    const [{ stock }] = await queryRunner.query(rawQuery, [
+      cart[index].productId,
+    ])
     if (stock === 0) {
       throw new Error(`NO_STOCK_FOR_PRODUCT_ID_${cart[index].productId}`)
     }
@@ -151,7 +155,8 @@ const postOrders = async (queryRunner, user, orderNumber, paymentAmount) => {
     user.email,
     PAYMENT_METHOD,
     paymentAmount,
-    ORDER_STATUS.COMPLETE])
+    ORDER_STATUS.COMPLETE,
+  ])
 
   return orderId
 }
@@ -163,13 +168,13 @@ const postOrderItem = async (queryRunner, orderId, cart, orderStatusId) => {
       (quantity, price, order_id, product_id, order_status_id)
       VALUES
       (?, ?, ?, ?, ?);`
-    const { affectedRows } = await queryRunner
-      .query(rawQuery, [
-        cart[index].quantity,
-        cart[index].productPrice,
-        orderId,
-        cart[index].productId,
-        orderStatusId])
+    const { affectedRows } = await queryRunner.query(rawQuery, [
+      cart[index].quantity,
+      cart[index].productPrice,
+      orderId,
+      cart[index].productId,
+      orderStatusId,
+    ])
     if (affectedRows != 1) throw new Error('NOT_INSERTED_ORDER_ITEM')
   }
 
@@ -188,7 +193,7 @@ const deleteCartByUserId = async (queryRunner, userId) => {
 
 const getPaymentAmount = (cart) => {
   let paymentAmount = 0
-  cart.forEach(cart => {
+  cart.forEach((cart) => {
     paymentAmount += cart.productPrice * cart.quantity
   })
 
@@ -196,14 +201,13 @@ const getPaymentAmount = (cart) => {
 }
 
 const calcUserPoint = async (queryRunner, user, paymentAmount) => {
-  if (Number(user.point) < paymentAmount) {
-    throw new Error('pointLessErr')
-  }
-
   const rawQuery = `
   UPDATE users SET point = point - ? WHERE id = ?;`
 
-  const { affectedRows } = await queryRunner.query(rawQuery, [paymentAmount, user.id])
+  const { affectedRows } = await queryRunner.query(rawQuery, [
+    paymentAmount,
+    user.id,
+  ])
   if (affectedRows != 1) {
     throw new Error('NOT_UPDATED_USER_POINT')
   }
@@ -219,7 +223,10 @@ const calcProductStock = async (queryRunner, cart) => {
     SET po.quantity = po.quantity - (SELECT c.quantity FROM cart c WHERE c.product_id = ?)
     WHERE po.product_id = ?;`
 
-    const result = await queryRunner.query(rawQuery, [cart[i].productId, cart[i].productId])
+    const result = await queryRunner.query(rawQuery, [
+      cart[i].productId,
+      cart[i].productId,
+    ])
 
     if (result.affectedRows != 1) throw new Error('FAILED_TO_CACL_STOCK')
   }
@@ -232,5 +239,5 @@ module.exports = {
   getOrderFromCart,
   getOrder,
   getProductsByProductIds,
-  getOptionsByProductIds
+  getOptionsByProductIds,
 }

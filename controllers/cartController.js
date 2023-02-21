@@ -9,7 +9,6 @@ const getCart = catchAsync(async (req, res) => {
   }
 
   const cartItems = await cartService.getCart(userId)
-
   return res.status(200).json(cartItems)
 })
 
@@ -53,5 +52,5 @@ module.exports = {
   getCart,
   addCartItem,
   deleteCartItem,
-  updateCartItem,
+  updateCartItem
 }

@@ -68,12 +68,13 @@ const messages = {
   // userErrorMsg End
 
   // productErrMsg Start
-
-  // productErrMsg End
   noProductIdErr: {
     statusCode: 400,
     message: 'PRODUCT_DOES_NOT_EXIST',
   },
+  
+  // productErrMsg End
+
   // cartErrMsg Start
   emptyCartIdErr: {
     statusCode: 400,
@@ -99,6 +100,7 @@ const messages = {
     statusCode: 400,
     message: 'FAILED_TO_UPDATE_ITEM',
   },
+
   // cartErrMsg End
 
   // orderErrMsg Start

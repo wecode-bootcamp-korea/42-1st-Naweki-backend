@@ -9,15 +9,18 @@ const validateToken = catchAsync(async (req, res, next) => {
     throw new Error('noAuthorizationErr')
   }
 
-  jwt.verify(authorization, process.env.SECRET_KEY, async (err, decoded) => {
-    if (err) {
-      throw new Error('invalidAccessTokenErr')
-    }
-    const result = await userDao.getUserById(decoded.id)
-    const user = new User(result)
-    req.user = user
-    next()
-  })
+  jwt.verify(
+    authorization,
+    process.env.SECRET_KEY,
+    async (err, decoded) => {
+      if (err) {
+        throw new Error('invalidAccessTokenErr')
+      }
+      const result = await userDao.getUserById(decoded.id)
+      const user = new User(result)
+      req.user = user
+      next()
+    })
 })
 
 module.exports = {

@@ -4,7 +4,7 @@ class Cart {
     this.productId = cartItems.product_id
     this.sizeId = cartItems?.size_id
     this.quantity = cartItems?.quantity
-  }
+    }
 
   keycheck() {
     return Boolean(

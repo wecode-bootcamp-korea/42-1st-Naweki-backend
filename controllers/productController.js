@@ -8,7 +8,7 @@ const getProducts = catchAsync(async (req, res) => {
 
   const filter = {
     category: category,
-    sub_category: subCategory,
+    subCategory: subCategory,
     gender: gender,
     color: color,
     limit: limit,
@@ -21,7 +21,7 @@ const getProducts = catchAsync(async (req, res) => {
 })
 
 const getPageAndLimit = (req) => {
-  let { page, limit } = req.query
+  let { page, limit = 20 } = req.query
   page = parseInt(page)
   limit = parseInt(limit)
   if (!page) page = DEFAULT_PAGE
