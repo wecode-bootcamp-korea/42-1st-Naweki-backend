@@ -67,6 +67,14 @@ const messages = {
 
   // userErrorMsg End
 
+  // productErrMsg Start
+  noProductIdErr: {
+    statusCode: 400,
+    message: 'PRODUCT_DOES_NOT_EXIST',
+  },
+  
+  // productErrMsg End
+
   // cartErrMsg Start
   emptyCartIdErr: {
     statusCode: 400,
@@ -82,6 +90,17 @@ const messages = {
     statusCode: 400,
     message: 'FAILED_TO_ADD_ITEM',
   },
+
+  failedToDeleteItemErr: {
+    statusCode: 400,
+    message: 'FAILED_TO_DELETE_ITEM',
+  },
+
+  failedToUpdateItemErr: {
+    statusCode: 400,
+    message: 'FAILED_TO_UPDATE_ITEM',
+  },
+
   // cartErrMsg End
 
   // orderErrMsg Start
